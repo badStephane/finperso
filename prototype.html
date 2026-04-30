@@ -1,0 +1,320 @@
+  
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.scene{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:1rem 0}
+.col{display:flex;flex-direction:column;gap:16px;align-items:center}
+.plabel{font-size:11px;color:var(--color-text-secondary);text-align:center;margin-bottom:4px}
+.phone{width:300px;background:var(--color-background-primary);border-radius:32px;border:0.5px solid var(--color-border-secondary);overflow:hidden;display:flex;flex-direction:column}
+.sb{padding:9px 18px 3px;display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-secondary)}
+.scr{flex:1;background:var(--color-background-tertiary);overflow:hidden;display:flex;flex-direction:column}
+.tb{display:flex;background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);padding:5px 0 8px}
+.ti{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.ti svg{width:20px;height:20px}
+.tl{font-size:9px;color:var(--color-text-secondary)}
+.tl.a{color:#1D9E75}
+
+.ph{background:var(--color-background-primary);padding:13px 14px 10px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.pg{font-size:11px;color:var(--color-text-secondary)}
+.pn{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-top:1px}
+.bc{margin:10px;background:#0F6E56;border-radius:14px;padding:14px}
+.bl{font-size:10px;color:#9FE1CB}
+.ba{font-size:22px;font-weight:500;color:#E1F5EE;margin:3px 0 10px}
+.br{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.bm{background:rgba(255,255,255,0.12);border-radius:8px;padding:7px 9px}
+.bml{font-size:9px;color:#9FE1CB}
+.bmv{font-size:12px;font-weight:500;color:#E1F5EE;margin-top:1px}
+.sh{display:flex;justify-content:space-between;align-items:center;padding:10px 14px 6px}
+.st{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.sa{font-size:10px;color:#1D9E75}
+.tlist{background:var(--color-background-primary);border-radius:12px;margin:0 10px;border:0.5px solid var(--color-border-tertiary)}
+.tr{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.tr:last-child{border-bottom:none}
+.tico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.ti2{flex:1;min-width:0}
+.tn{font-size:12px;color:var(--color-text-primary)}
+.td{font-size:10px;color:var(--color-text-secondary);margin-top:1px}
+.tam{font-size:12px;font-weight:500}
+.tam.n{color:#993C1D}
+.tam.p{color:#0F6E56}
+.fab{display:flex;justify-content:center;padding:6px 0 10px;background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary)}
+.fb{width:46px;height:46px;border-radius:50%;background:#1D9E75;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:22px;color:#E1F5EE;font-weight:300;line-height:1}
+
+.page-full{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.page-hdr{background:var(--color-background-primary);padding:12px 14px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.page-title{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.badge-sm{font-size:10px;padding:3px 7px;border-radius:20px;background:#E1F5EE;color:#085041}
+.filter-row{display:flex;gap:6px;padding:10px 14px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);overflow-x:auto}
+.chip{font-size:10px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--color-border-tertiary);background:transparent;color:var(--color-text-secondary);white-space:nowrap;cursor:pointer;flex-shrink:0}
+.chip.act{background:#E1F5EE;border-color:#1D9E75;color:#085041}
+.tx-section{padding:10px 14px 4px;font-size:10px;color:var(--color-text-secondary);font-weight:500}
+.tlist2{background:var(--color-background-primary);border-radius:12px;margin:0 10px 8px;border:0.5px solid var(--color-border-tertiary)}
+
+.goal-card{margin:10px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;padding:12px}
+.goal-card+.goal-card{margin-top:0}
+.gc-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.gc-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.gc-info{flex:1}
+.gc-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.gc-date{font-size:10px;color:var(--color-text-secondary);margin-top:1px}
+.gc-pct{font-size:12px;font-weight:500;color:#0F6E56}
+.prog-track{height:5px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.prog-fill{height:100%;border-radius:99px}
+.gc-foot{display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-secondary)}
+.add-goal{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 10px;padding:10px;border:0.5px dashed var(--color-border-secondary);border-radius:12px;cursor:pointer;font-size:12px;color:var(--color-text-secondary)}
+
+.bud-summary{margin:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bud-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:10px;padding:10px}
+.bud-lbl{font-size:10px;color:var(--color-text-secondary)}
+.bud-val{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-top:2px}
+.bud-sub{font-size:10px;margin-top:2px}
+.bud-sub.ok{color:#0F6E56}
+.bud-sub.warn{color:#854F0B}
+.cat-bud-list{flex:1;overflow:hidden;padding:0 10px 8px}
+.cbl-item{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:10px;padding:10px;margin-bottom:6px}
+.cbl-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cbl-left{display:flex;align-items:center;gap:6px}
+.cbl-ico{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px}
+.cbl-name{font-size:12px;color:var(--color-text-primary)}
+.cbl-right{font-size:11px;color:var(--color-text-secondary)}
+.cbl-right span{color:var(--color-text-primary);font-weight:500}
+
+.prof-head{background:var(--color-background-primary);padding:20px 14px 14px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;align-items:center;gap:6px}
+.prof-av{width:52px;height:52px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:#085041}
+.prof-name{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.prof-email{font-size:11px;color:var(--color-text-secondary)}
+.prof-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:10px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;overflow:hidden}
+.ps-item{padding:10px 6px;text-align:center;border-right:0.5px solid var(--color-border-tertiary)}
+.ps-item:last-child{border-right:none}
+.ps-val{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.ps-lbl{font-size:9px;color:var(--color-text-secondary);margin-top:2px}
+.menu-list{margin:0 10px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;overflow:hidden}
+.menu-item{display:flex;align-items:center;justify-content:space-between;padding:11px 12px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.menu-item:last-child{border-bottom:none}
+.menu-left{display:flex;align-items:center;gap:8px}
+.menu-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.menu-lbl{font-size:12px;color:var(--color-text-primary)}
+.menu-arrow{font-size:14px;color:var(--color-text-secondary)}
+</style>
+
+<h2 class="sr-only">Prototype mobile Finperso — toutes les pages : accueil, transactions, objectifs, budget, profil</h2>
+
+<div class="scene">
+
+  <div class="col">
+    <div>
+      <div class="plabel">Accueil</div>
+      <div class="phone">
+        <div class="sb"><span>9:41</span><span>●●●</span></div>
+        <div class="scr">
+          <div class="ph"><div class="pg">Bonjour 👋</div><div class="pn">Mamadou Diallo</div></div>
+          <div class="bc">
+            <div class="bl">Solde total</div>
+            <div class="ba">485 000 F</div>
+            <div class="br">
+              <div class="bm"><div class="bml">Dépenses avril</div><div class="bmv">215 000 F</div></div>
+              <div class="bm"><div class="bml">Épargne avril</div><div class="bmv">85 000 F</div></div>
+            </div>
+          </div>
+          <div class="sh"><div class="st">Récentes</div><div class="sa">Voir tout</div></div>
+          <div class="tlist">
+            <div class="tr"><div class="tico" style="background:#E1F5EE">🛒</div><div class="ti2"><div class="tn">Marché Sandaga</div><div class="td">Alimentation · 28 avr</div></div><div class="tam n">-12 500</div></div>
+            <div class="tr"><div class="tico" style="background:#E6F1FB">🚌</div><div class="ti2"><div class="tn">DDD Transport</div><div class="td">Transport · 27 avr</div></div><div class="tam n">-3 000</div></div>
+            <div class="tr"><div class="tico" style="background:#EAF3DE">💰</div><div class="ti2"><div class="tn">Salaire</div><div class="td">Revenu · 25 avr</div></div><div class="tam p">+350 000</div></div>
+          </div>
+          <div style="height:8px"></div>
+        </div>
+        <div class="fab"><div class="fb">+</div></div>
+        <div class="tb">
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="2" fill="#1D9E75"/><rect x="11" y="2" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="2" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="11" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/></svg><span class="tl a">Accueil</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h9M3 15h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Transactions</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5" opacity="0.35"/><path d="M10 7v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Objectifs</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><path d="M3 16V8l7-5 7 5v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/></svg><span class="tl">Budget</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5" opacity="0.35"/><path d="M3 18c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Profil</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="plabel">Transactions</div>
+      <div class="phone">
+        <div class="sb"><span>9:41</span><span>●●●</span></div>
+        <div class="scr">
+          <div class="page-hdr"><span class="page-title">Transactions</span><span class="badge-sm">Avril 2026</span></div>
+          <div class="filter-row">
+            <div class="chip act">Tout</div>
+            <div class="chip">Dépenses</div>
+            <div class="chip">Revenus</div>
+            <div class="chip">Alimentation</div>
+            <div class="chip">Transport</div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding-bottom:8px">
+            <div class="tx-section">Aujourd'hui</div>
+            <div class="tlist2">
+              <div class="tr"><div class="tico" style="background:#E1F5EE">🛒</div><div class="ti2"><div class="tn">Marché Sandaga</div><div class="td">Alimentation · Wave</div></div><div class="tam n">-12 500 F</div></div>
+              <div class="tr"><div class="tico" style="background:#FBEAF0">💊</div><div class="ti2"><div class="tn">Pharmacie Guigon</div><div class="td">Santé · Espèces</div></div><div class="tam n">-8 000 F</div></div>
+            </div>
+            <div class="tx-section">Hier</div>
+            <div class="tlist2">
+              <div class="tr"><div class="tico" style="background:#E6F1FB">🚌</div><div class="ti2"><div class="tn">DDD Transport</div><div class="td">Transport · Orange Money</div></div><div class="tam n">-3 000 F</div></div>
+              <div class="tr"><div class="tico" style="background:#FAEEDA">💡</div><div class="ti2"><div class="tn">SENELEC</div><div class="td">Logement · Wave</div></div><div class="tam n">-18 000 F</div></div>
+            </div>
+            <div class="tx-section">25 avril</div>
+            <div class="tlist2">
+              <div class="tr"><div class="tico" style="background:#EAF3DE">💰</div><div class="ti2"><div class="tn">Salaire</div><div class="td">Revenu · Banque</div></div><div class="tam p">+350 000 F</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="fab"><div class="fb">+</div></div>
+        <div class="tb">
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="11" y="2" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="2" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="11" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/></svg><span class="tl">Accueil</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h9M3 15h6" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tl a">Transactions</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5" opacity="0.35"/><path d="M10 7v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Objectifs</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><path d="M3 16V8l7-5 7 5v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/></svg><span class="tl">Budget</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5" opacity="0.35"/><path d="M3 18c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Profil</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div>
+      <div class="plabel">Objectifs d'épargne</div>
+      <div class="phone">
+        <div class="sb"><span>9:41</span><span>●●●</span></div>
+        <div class="scr">
+          <div class="page-hdr"><span class="page-title">Objectifs</span><span class="badge-sm">3 actifs</span></div>
+          <div style="flex:1;overflow:hidden;padding:10px 0 0">
+            <div class="goal-card">
+              <div class="gc-top">
+                <div class="gc-ico" style="background:#E1F5EE">🏦</div>
+                <div class="gc-info"><div class="gc-name">Fonds d'urgence</div><div class="gc-date">Objectif : déc 2026</div></div>
+                <div class="gc-pct">68%</div>
+              </div>
+              <div class="prog-track"><div class="prog-fill" style="width:68%;background:#1D9E75"></div></div>
+              <div class="gc-foot"><span>340 000 F épargnés</span><span>500 000 F cible</span></div>
+            </div>
+            <div class="goal-card" style="margin-top:8px">
+              <div class="gc-top">
+                <div class="gc-ico" style="background:#E6F1FB">✈️</div>
+                <div class="gc-info"><div class="gc-name">Voyage familial</div><div class="gc-date">Objectif : août 2026</div></div>
+                <div class="gc-pct">42%</div>
+              </div>
+              <div class="prog-track"><div class="prog-fill" style="width:42%;background:#378ADD"></div></div>
+              <div class="gc-foot"><span>210 000 F épargnés</span><span>500 000 F cible</span></div>
+            </div>
+            <div class="goal-card" style="margin-top:8px">
+              <div class="gc-top">
+                <div class="gc-ico" style="background:#FAEEDA">🏍️</div>
+                <div class="gc-info"><div class="gc-name">Achat moto</div><div class="gc-date">Objectif : mai 2026</div></div>
+                <div class="gc-pct" style="color:#BA7517">91%</div>
+              </div>
+              <div class="prog-track"><div class="prog-fill" style="width:91%;background:#BA7517"></div></div>
+              <div class="gc-foot"><span>182 000 F épargnés</span><span>200 000 F cible</span></div>
+            </div>
+            <div class="add-goal">+ Nouvel objectif</div>
+          </div>
+        </div>
+        <div class="tb">
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="11" y="2" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="2" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="11" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/></svg><span class="tl">Accueil</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h9M3 15h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Transactions</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#1D9E75" stroke-width="1.5"/><path d="M10 7v3l2 2" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tl a">Objectifs</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><path d="M3 16V8l7-5 7 5v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/></svg><span class="tl">Budget</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5" opacity="0.35"/><path d="M3 18c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Profil</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="plabel">Budget mensuel</div>
+      <div class="phone">
+        <div class="sb"><span>9:41</span><span>●●●</span></div>
+        <div class="scr">
+          <div class="page-hdr"><span class="page-title">Budget — Avril</span><span class="badge-sm">Modifier</span></div>
+          <div class="bud-summary">
+            <div class="bud-card"><div class="bud-lbl">Budget total</div><div class="bud-val">300 000 F</div><div class="bud-sub ok">72% utilisé</div></div>
+            <div class="bud-card"><div class="bud-lbl">Reste à dépenser</div><div class="bud-val">85 000 F</div><div class="bud-sub ok">3 jours restants</div></div>
+          </div>
+          <div class="sh"><div class="st">Par catégorie</div></div>
+          <div class="cat-bud-list">
+            <div class="cbl-item">
+              <div class="cbl-top">
+                <div class="cbl-left"><div class="cbl-ico" style="background:#E1F5EE">🛒</div><div class="cbl-name">Alimentation</div></div>
+                <div class="cbl-right"><span>87 000</span> / 100 000 F</div>
+              </div>
+              <div class="prog-track"><div class="prog-fill" style="width:87%;background:#1D9E75"></div></div>
+            </div>
+            <div class="cbl-item">
+              <div class="cbl-top">
+                <div class="cbl-left"><div class="cbl-ico" style="background:#FAEEDA">🏠</div><div class="cbl-name">Logement</div></div>
+                <div class="cbl-right"><span>84 000</span> / 80 000 F</div>
+              </div>
+              <div class="prog-track"><div class="prog-fill" style="width:100%;background:#D85A30"></div></div>
+            </div>
+            <div class="cbl-item">
+              <div class="cbl-top">
+                <div class="cbl-left"><div class="cbl-ico" style="background:#E6F1FB">🚌</div><div class="cbl-name">Transport</div></div>
+                <div class="cbl-right"><span>32 000</span> / 50 000 F</div>
+              </div>
+              <div class="prog-track"><div class="prog-fill" style="width:64%;background:#378ADD"></div></div>
+            </div>
+            <div class="cbl-item">
+              <div class="cbl-top">
+                <div class="cbl-left"><div class="cbl-ico" style="background:#FBEAF0">💊</div><div class="cbl-name">Santé</div></div>
+                <div class="cbl-right"><span>12 000</span> / 30 000 F</div>
+              </div>
+              <div class="prog-track"><div class="prog-fill" style="width:40%;background:#D4537E"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="tb">
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="11" y="2" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="2" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="11" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/></svg><span class="tl">Accueil</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h9M3 15h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Transactions</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5" opacity="0.35"/><path d="M10 7v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Objectifs</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><path d="M3 16V8l7-5 7 5v8" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="tl a">Budget</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5" opacity="0.35"/><path d="M3 18c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Profil</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div>
+      <div class="plabel">Profil</div>
+      <div class="phone">
+        <div class="sb"><span>9:41</span><span>●●●</span></div>
+        <div class="scr">
+          <div class="prof-head">
+            <div class="prof-av">MD</div>
+            <div class="prof-name">Mamadou Diallo</div>
+            <div class="prof-email">mamadou@email.com</div>
+          </div>
+          <div class="prof-stats">
+            <div class="ps-item"><div class="ps-val">47</div><div class="ps-lbl">transactions</div></div>
+            <div class="ps-item"><div class="ps-val">3</div><div class="ps-lbl">objectifs</div></div>
+            <div class="ps-item"><div class="ps-val">4 mois</div><div class="ps-lbl">d'historique</div></div>
+          </div>
+          <div class="sh"><div class="st">Paramètres</div></div>
+          <div class="menu-list">
+            <div class="menu-item"><div class="menu-left"><div class="menu-ico" style="background:#E1F5EE">🏦</div><div class="menu-lbl">Mes comptes</div></div><div class="menu-arrow">›</div></div>
+            <div class="menu-item"><div class="menu-left"><div class="menu-ico" style="background:#E6F1FB">🔔</div><div class="menu-lbl">Notifications</div></div><div class="menu-arrow">›</div></div>
+            <div class="menu-item"><div class="menu-left"><div class="menu-ico" style="background:#FAEEDA">🏷️</div><div class="menu-lbl">Catégories</div></div><div class="menu-arrow">›</div></div>
+            <div class="menu-item"><div class="menu-left"><div class="menu-ico" style="background:#EAF3DE">📊</div><div class="menu-lbl">Exporter données</div></div><div class="menu-arrow">›</div></div>
+            <div class="menu-item"><div class="menu-left"><div class="menu-ico" style="background:#F1EFE8">🔒</div><div class="menu-lbl">Sécurité</div></div><div class="menu-arrow">›</div></div>
+          </div>
+          <div style="margin:10px;padding:10px 12px;background:#FAECE7;border-radius:10px;border:0.5px solid #F0997B">
+            <div style="font-size:11px;font-weight:500;color:#712B13">Déconnexion</div>
+            <div style="font-size:10px;color:#993C1D;margin-top:2px">Mamadou Diallo · Wave</div>
+          </div>
+        </div>
+        <div class="tb">
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="11" y="2" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="2" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/><rect x="11" y="11" width="7" height="7" rx="2" fill="currentColor" opacity="0.2"/></svg><span class="tl">Accueil</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h9M3 15h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Transactions</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5" opacity="0.35"/><path d="M10 7v3l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/></svg><span class="tl">Objectifs</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><path d="M3 16V8l7-5 7 5v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/></svg><span class="tl">Budget</span></div>
+          <div class="ti"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="#1D9E75" stroke-width="1.5"/><path d="M3 18c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tl a">Profil</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
