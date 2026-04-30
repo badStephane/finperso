@@ -46,14 +46,21 @@ function buildInsights(stats: Record<string, MonthlyStats>): Insight[] {
   const thisMonth = stats[thisKey]
   const prevMonth = stats[prevKey]
 
-  if (!thisMonth || (thisMonth.totalDepenses === 0 && thisMonth.totalRevenus === 0)) {
+  // monthlyStats is updated incrementally — a fresh month with only DEPENSE
+  // writes leaves totalRevenus undefined (and vice versa). Coerce to 0 so we
+  // never propagate NaN into the rendered text.
+  const dep = thisMonth?.totalDepenses ?? 0
+  const rev = thisMonth?.totalRevenus ?? 0
+  const prevDep = prevMonth?.totalDepenses ?? 0
+
+  if (!thisMonth || (dep === 0 && rev === 0)) {
     return out
   }
 
   // 1) Spending trend vs previous month (only when both months have spending)
-  if (prevMonth?.totalDepenses && thisMonth.totalDepenses) {
-    const diff = thisMonth.totalDepenses - prevMonth.totalDepenses
-    const pct = Math.round((diff / prevMonth.totalDepenses) * 100)
+  if (prevDep > 0 && dep > 0) {
+    const diff = dep - prevDep
+    const pct = Math.round((diff / prevDep) * 100)
     if (Math.abs(pct) >= 5) {
       const monthLabel = format(prev, 'MMMM', { locale: fr })
       out.push({
@@ -68,9 +75,9 @@ function buildInsights(stats: Record<string, MonthlyStats>): Insight[] {
   }
 
   // 2) Saving rate or deficit this month
-  const net = thisMonth.totalRevenus - thisMonth.totalDepenses
-  if (thisMonth.totalRevenus > 0) {
-    const ratio = net / thisMonth.totalRevenus
+  const net = rev - dep
+  if (rev > 0) {
+    const ratio = net / rev
     if (ratio >= 0.1) {
       out.push({
         tone: 'good',
