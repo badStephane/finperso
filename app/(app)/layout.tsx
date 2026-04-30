@@ -12,7 +12,7 @@ const BottomNav = dynamic(
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard>
-      <div className="flex flex-col min-h-screen pb-16">
+      <div className="flex flex-col min-h-screen pb-nav-safe">
         {children}
       </div>
       <BottomNav />
