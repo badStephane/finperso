@@ -68,7 +68,7 @@ export function BottomSheet({ open, onClose, title, children, maxHeight = '90vh'
       role="dialog"
       aria-modal="true"
       aria-label={title}
-      className="fixed inset-0 z-50 flex items-end"
+      className="fixed inset-0 z-[60] flex items-end"
     >
       <button
         type="button"

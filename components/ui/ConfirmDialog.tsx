@@ -49,7 +49,7 @@ export function ConfirmDialog({
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-title"
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center px-4"
+      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center px-4"
     >
       <button
         type="button"
