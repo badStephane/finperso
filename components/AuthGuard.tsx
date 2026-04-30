@@ -4,47 +4,62 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { auth } from '@/lib/firebase/config'
-import { Skeleton } from '@/components/ui/SkeletonLoader'
+import { AppSplash } from '@/components/AppSplash'
+
+const SPLASH_MIN_MS = 600
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   // Subscribe so the rest of the app can read user/profile from the store.
   useAuth()
   const router = useRouter()
+  const [mounted, setMounted] = useState(false)
   const [authReady, setAuthReady] = useState(false)
+  const [minTimePassed, setMinTimePassed] = useState(false)
+  const [splashGone, setSplashGone] = useState(false)
+  const [hasUser, setHasUser] = useState(false)
 
-  // Wait for Firebase to confirm the initial auth state before deciding.
-  // The store's `loading` flag can't be used here: it stays true while the
-  // profile snapshot is in flight, which would block rendering forever if
-  // Firestore is slow or offline. Auth and profile are now independent.
   useEffect(() => {
+    setMounted(true)
     let cancelled = false
-    auth.authStateReady().then(() => {
-      if (!cancelled) setAuthReady(true)
-    })
+    if (auth) {
+      auth.authStateReady().then(() => {
+        if (cancelled) return
+        setHasUser(!!auth.currentUser)
+        setAuthReady(true)
+      })
+    }
+    const t = setTimeout(() => setMinTimePassed(true), SPLASH_MIN_MS)
     return () => {
       cancelled = true
+      clearTimeout(t)
     }
   }, [])
 
   useEffect(() => {
     if (!authReady) return
-    if (!auth.currentUser) {
+    setHasUser(!!auth?.currentUser)
+    if (!auth?.currentUser) {
       router.replace('/login')
     }
   }, [authReady, router])
 
-  if (!authReady) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="space-y-3 w-48">
-          <Skeleton className="h-6 w-full" />
-          <Skeleton className="h-4 w-2/3" />
-        </div>
-      </div>
-    )
-  }
+  // Fade out once both gates pass, then unmount the splash after the transition.
+  const ready = authReady && minTimePassed
+  useEffect(() => {
+    if (!ready) return
+    const t = setTimeout(() => setSplashGone(true), 320)
+    return () => clearTimeout(t)
+  }, [ready])
 
-  if (!auth.currentUser) return null
+  // SSR / pre-render: show splash, no children, no Firebase access.
+  if (!mounted) return <AppSplash />
 
-  return <>{children}</>
+  if (!hasUser && authReady) return null
+
+  return (
+    <>
+      {!splashGone && <AppSplash fadingOut={ready} />}
+      {hasUser && children}
+    </>
+  )
 }
