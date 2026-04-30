@@ -131,7 +131,7 @@ export default function ComptesPage() {
             </button>
           </div>
         ) : (
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden stagger-children">
             {comptes.map((c) => (
               <div
                 key={c.id}

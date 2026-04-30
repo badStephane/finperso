@@ -136,7 +136,7 @@ export default function BudgetPage() {
           <div className="px-4 pt-4 pb-2 flex items-center justify-between">
             <h2 className="text-base font-semibold text-gray-900">Par catégorie</h2>
           </div>
-          <div className="px-4 pb-4 flex-1 overflow-y-auto space-y-2">
+          <div className="px-4 pb-4 flex-1 overflow-y-auto space-y-2 stagger-children">
             {budgets.map((b) => (
               <CategoryBudgetItem
                 key={b.id}

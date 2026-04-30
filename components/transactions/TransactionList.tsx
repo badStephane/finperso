@@ -58,7 +58,7 @@ export function TransactionList({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto pb-4">
+    <div className="flex-1 overflow-y-auto pb-4 stagger-children">
       {grouped.map((group) => (
         <div key={group.date}>
           <p className="px-4 pt-4 pb-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">

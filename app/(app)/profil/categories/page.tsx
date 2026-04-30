@@ -128,7 +128,7 @@ export default function CategoriesPage() {
               <p className="px-4 pt-5 pb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 {title}
               </p>
-              <div className="mx-4 bg-white border border-gray-200 rounded-xl overflow-hidden">
+              <div className="mx-4 bg-white border border-gray-200 rounded-xl overflow-hidden stagger-children">
                 {items.length === 0 ? (
                   <p className="text-sm text-gray-400 text-center py-4">Aucune catégorie</p>
                 ) : (
