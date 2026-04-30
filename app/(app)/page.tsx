@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useComptes } from '@/hooks/useComptes'
 import { getMonthKey } from '@/lib/utils/dates'
 import { BalanceCard } from '@/components/dashboard/BalanceCard'
+import { QuickAdd } from '@/components/dashboard/QuickAdd'
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions'
 import { SpendingChart } from '@/components/dashboard/SpendingChart'
 import { SkeletonCard } from '@/components/ui/SkeletonLoader'
@@ -92,6 +93,7 @@ export default function DashboardPage() {
       </div>
 
       <BalanceCard comptes={comptes} monthStats={monthStats} />
+      <QuickAdd comptes={comptes} />
       <RecentTransactions transactions={recentTx} />
       <SpendingChart budgets={budgets} />
       <div className="h-4" />

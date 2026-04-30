@@ -16,11 +16,21 @@ function formatThousands(digits: string): string {
   return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 }
 
-export function TransactionForm() {
+interface TransactionFormProps {
+  defaultCompteId?: string
+  defaultType?: TransactionType
+  autoFocusAmount?: boolean
+}
+
+export function TransactionForm({
+  defaultCompteId,
+  defaultType,
+  autoFocusAmount,
+}: TransactionFormProps = {}) {
   const router = useRouter()
   const { add } = useTransactions()
   const showToast = useToastStore((s) => s.show)
-  const [type, setType] = useState<TransactionType>('DEPENSE')
+  const [type, setType] = useState<TransactionType>(defaultType ?? 'DEPENSE')
   const categoryFilterType = type === 'TRANSFERT' ? 'DEPENSE' : type
   const { categories } = useCategories(categoryFilterType)
   const { comptes } = useComptes()
@@ -40,10 +50,13 @@ export function TransactionForm() {
 
   useEffect(() => {
     if (!compteId && comptes.length > 0) {
-      const defaultCompte = comptes.find((c) => c.isDefault) ?? comptes[0]
-      setCompteId(defaultCompte.id)
+      const requested = defaultCompteId
+        ? comptes.find((c) => c.id === defaultCompteId)
+        : null
+      const fallback = requested ?? comptes.find((c) => c.isDefault) ?? comptes[0]
+      setCompteId(fallback.id)
     }
-  }, [comptes, compteId])
+  }, [comptes, compteId, defaultCompteId])
 
   // Pick a sensible default destination for transfers (first compte ≠ source)
   useEffect(() => {
@@ -189,6 +202,7 @@ export function TransactionForm() {
           id="amount"
           type="text"
           inputMode="numeric"
+          autoFocus={autoFocusAmount}
           value={formatThousands(amount)}
           onChange={(e) => {
             const v = e.target.value.replace(/\D/g, '')
