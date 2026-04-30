@@ -26,7 +26,7 @@ export default function TransactionsPage() {
     loadTransactions()
   }, [loadTransactions])
 
-  function handleTypeChange(type?: 'DEPENSE' | 'REVENU') {
+  function handleTypeChange(type?: 'DEPENSE' | 'REVENU' | 'TRANSFERT') {
     const newFilters = { ...filters, type, categoryId: undefined }
     setFilters(newFilters)
     loadTransactions(newFilters)

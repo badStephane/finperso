@@ -66,7 +66,7 @@ export function TransactionItem({ transaction: tx, onDelete }: TransactionItemPr
         >
           <div
             className="w-10 h-10 rounded-lg flex items-center justify-center text-base flex-shrink-0"
-            style={{ backgroundColor: '#E1F5EE' }}
+            style={{ backgroundColor: tx.type === 'TRANSFERT' ? '#F3F4F6' : '#E1F5EE' }}
             aria-hidden="true"
           >
             {tx.categoryIcon}
@@ -76,16 +76,28 @@ export function TransactionItem({ transaction: tx, onDelete }: TransactionItemPr
               {tx.note || tx.categoryName}
             </p>
             <p className="text-xs text-gray-500 truncate mt-0.5">
-              {tx.categoryName} · {tx.compteName}
+              {tx.type === 'TRANSFERT'
+                ? `${tx.compteName} → ${tx.toCompteName ?? '?'}`
+                : `${tx.categoryName} · ${tx.compteName}`}
             </p>
           </div>
           <span
             className={`text-sm font-semibold whitespace-nowrap tabular-nums shrink-0 ${
-              tx.type === 'DEPENSE' ? 'text-[#993C1D]' : 'text-[#0F6E56]'
+              tx.type === 'DEPENSE'
+                ? 'text-[#993C1D]'
+                : tx.type === 'REVENU'
+                  ? 'text-[#0F6E56]'
+                  : 'text-gray-700'
             }`}
-            aria-label={`${tx.type === 'DEPENSE' ? 'Dépense' : 'Revenu'} de ${formatCFA(tx.amount)}`}
+            aria-label={
+              tx.type === 'DEPENSE'
+                ? `Dépense de ${formatCFA(tx.amount)}`
+                : tx.type === 'REVENU'
+                  ? `Revenu de ${formatCFA(tx.amount)}`
+                  : `Transfert de ${formatCFA(tx.amount)}`
+            }
           >
-            {tx.type === 'DEPENSE' ? '−' : '+'}
+            {tx.type === 'DEPENSE' ? '−' : tx.type === 'REVENU' ? '+' : ''}
             {formatCFA(tx.amount)}
           </span>
         </div>

@@ -30,6 +30,19 @@ export async function addTransaction(
     deletedAt: null,
   })
 
+  if (data.type === 'TRANSFERT') {
+    batch.update(doc(db, `users/${userId}/comptes/${data.compteId}`), {
+      balance: increment(-data.amount),
+    })
+    if (data.toCompteId) {
+      batch.update(doc(db, `users/${userId}/comptes/${data.toCompteId}`), {
+        balance: increment(data.amount),
+      })
+    }
+    await batch.commit()
+    return txRef.id
+  }
+
   const compteRef = doc(db, `users/${userId}/comptes/${data.compteId}`)
   const delta = data.type === 'REVENU' ? data.amount : -data.amount
   batch.update(compteRef, {
@@ -106,6 +119,19 @@ export async function deleteTransaction(
   batch.update(doc(db, `users/${userId}/transactions/${transactionId}`), {
     deletedAt: serverTimestamp(),
   })
+
+  if (transaction.type === 'TRANSFERT') {
+    batch.update(doc(db, `users/${userId}/comptes/${transaction.compteId}`), {
+      balance: increment(transaction.amount),
+    })
+    if (transaction.toCompteId) {
+      batch.update(doc(db, `users/${userId}/comptes/${transaction.toCompteId}`), {
+        balance: increment(-transaction.amount),
+      })
+    }
+    await batch.commit()
+    return
+  }
 
   const delta = transaction.type === 'REVENU' ? -transaction.amount : transaction.amount
   batch.update(doc(db, `users/${userId}/comptes/${transaction.compteId}`), {

@@ -33,7 +33,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
             >
               <div
                 className="w-9 h-9 rounded-lg flex items-center justify-center text-base flex-shrink-0"
-                style={{ backgroundColor: '#E1F5EE' }}
+                style={{ backgroundColor: tx.type === 'TRANSFERT' ? '#F3F4F6' : '#E1F5EE' }}
               >
                 {tx.categoryIcon}
               </div>
@@ -42,15 +42,21 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
                   {tx.note || tx.categoryName}
                 </p>
                 <p className="text-xs text-gray-500 truncate mt-0.5">
-                  {tx.categoryName} · {formatDateShort(tx.date.toDate())}
+                  {tx.type === 'TRANSFERT'
+                    ? `${tx.compteName} → ${tx.toCompteName ?? '?'}`
+                    : `${tx.categoryName} · ${formatDateShort(tx.date.toDate())}`}
                 </p>
               </div>
               <span
                 className={`text-sm font-semibold tabular-nums shrink-0 ${
-                  tx.type === 'DEPENSE' ? 'text-[#993C1D]' : 'text-[#0F6E56]'
+                  tx.type === 'DEPENSE'
+                    ? 'text-[#993C1D]'
+                    : tx.type === 'REVENU'
+                      ? 'text-[#0F6E56]'
+                      : 'text-gray-700'
                 }`}
               >
-                {tx.type === 'DEPENSE' ? '−' : '+'}
+                {tx.type === 'DEPENSE' ? '−' : tx.type === 'REVENU' ? '+' : ''}
                 {formatCFA(tx.amount)}
               </span>
             </Link>

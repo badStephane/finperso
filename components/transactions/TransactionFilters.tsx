@@ -14,6 +14,7 @@ const typeChips: { label: string; value?: TransactionType }[] = [
   { label: 'Tout' },
   { label: 'Dépenses', value: 'DEPENSE' },
   { label: 'Revenus', value: 'REVENU' },
+  { label: 'Transferts', value: 'TRANSFERT' },
 ]
 
 export function TransactionFilterBar({

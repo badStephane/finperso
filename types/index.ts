@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase/firestore'
 
 export type CompteType = 'MOBILE_MONEY' | 'BANQUE' | 'ESPECES' | 'EPARGNE'
-export type TransactionType = 'DEPENSE' | 'REVENU'
+export type TransactionType = 'DEPENSE' | 'REVENU' | 'TRANSFERT'
 export type CategoryType = 'DEPENSE' | 'REVENU'
 
 export interface MonthlyStats {
@@ -50,6 +50,9 @@ export interface Transaction {
   categoryIcon: string
   compteId: string
   compteName: string
+  /** Destination account (TRANSFERT only). compteId is the source. */
+  toCompteId: string | null
+  toCompteName: string | null
   date: Timestamp
   note: string | null
   createdAt: Timestamp
@@ -64,6 +67,8 @@ export interface CreateTransactionInput {
   categoryIcon: string
   compteId: string
   compteName: string
+  toCompteId: string | null
+  toCompteName: string | null
   date: Date
   note: string | null
 }
