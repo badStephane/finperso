@@ -1,15 +1,23 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useCategories } from '@/hooks/useCategories'
 import { useComptes } from '@/hooks/useComptes'
 import { useTransactions } from '@/hooks/useTransactions'
+import { useToastStore } from '@/stores/toastStore'
 import type { TransactionType } from '@/types'
+
+function formatThousands(digits: string): string {
+  if (!digits) return ''
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+}
 
 export function TransactionForm() {
   const router = useRouter()
   const { add } = useTransactions()
+  const showToast = useToastStore((s) => s.show)
   const [type, setType] = useState<TransactionType>('DEPENSE')
   const { categories } = useCategories(type)
   const { comptes } = useComptes()
@@ -20,11 +28,11 @@ export function TransactionForm() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [note, setNote] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const selectedCategory = categories.find((c) => c.id === categoryId)
   const selectedCompte = comptes.find((c) => c.id === compteId)
 
-  // Auto-select default compte
   useEffect(() => {
     if (!compteId && comptes.length > 0) {
       const defaultCompte = comptes.find((c) => c.isDefault) ?? comptes[0]
@@ -32,8 +40,16 @@ export function TransactionForm() {
     }
   }, [comptes, compteId])
 
+  const missing = useMemo(() => {
+    if (!amount || amount === '0') return 'Saisissez un montant'
+    if (!categoryId) return 'Choisissez une catégorie'
+    if (!compteId) return 'Choisissez un compte'
+    return null
+  }, [amount, categoryId, compteId])
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setError(null)
     if (!selectedCategory || !selectedCompte || !amount) return
 
     setSubmitting(true)
@@ -49,18 +65,39 @@ export function TransactionForm() {
         date: new Date(date),
         note: note.trim() || null,
       })
+      showToast('Transaction enregistrée', 'success')
       router.back()
     } catch {
-      // toast handled by hook
+      setError('Échec de l’enregistrement. Vérifiez votre connexion et réessayez.')
     } finally {
       setSubmitting(false)
     }
   }
 
+  if (comptes.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center flex-1 px-6 py-12 text-center">
+        <p className="text-base font-medium text-gray-900">Créez d’abord un compte</p>
+        <p className="text-sm text-gray-500 mt-2 max-w-xs">
+          Vous avez besoin d’au moins un compte pour enregistrer une transaction.
+        </p>
+        <Link
+          href="/profil/comptes"
+          className="mt-5 inline-flex items-center justify-center h-11 px-5 rounded-lg bg-[#1D9E75] text-white text-sm font-medium active:scale-[0.98] transition-transform"
+        >
+          Gérer mes comptes
+        </Link>
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col flex-1">
-      {/* Type toggle */}
-      <div className="flex mx-4 mt-4 bg-gray-100 rounded-xl p-1" role="radiogroup" aria-label="Type de transaction">
+      <div
+        className="flex mx-4 mt-4 bg-gray-100 rounded-xl p-1"
+        role="radiogroup"
+        aria-label="Type de transaction"
+      >
         {(['DEPENSE', 'REVENU'] as const).map((t) => (
           <button
             key={t}
@@ -71,7 +108,7 @@ export function TransactionForm() {
               setType(t)
               setCategoryId('')
             }}
-            className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-colors cursor-pointer ${
+            className={`flex-1 min-h-[44px] text-sm font-semibold rounded-lg transition-colors cursor-pointer ${
               type === t
                 ? t === 'DEPENSE'
                   ? 'bg-white text-[#993C1D] shadow-sm'
@@ -84,56 +121,67 @@ export function TransactionForm() {
         ))}
       </div>
 
-      {/* Amount */}
       <div className="px-4 mt-6 text-center">
-        <label htmlFor="amount" className="sr-only">Montant</label>
+        <label htmlFor="amount" className="sr-only">
+          Montant
+        </label>
         <input
           id="amount"
           type="text"
           inputMode="numeric"
-          value={amount}
+          value={formatThousands(amount)}
           onChange={(e) => {
             const v = e.target.value.replace(/\D/g, '')
             setAmount(v)
           }}
           placeholder="0"
-          autoFocus
-          className="text-[32px] font-medium text-center w-full bg-transparent focus:outline-none text-gray-900"
+          className="text-[36px] font-semibold text-center w-full bg-transparent focus:outline-none text-gray-900 tabular-nums tracking-tight"
         />
         <p className="text-sm text-gray-400 mt-1">F CFA</p>
       </div>
 
-      {/* Categories grid */}
       <div className="px-4 mt-6">
-        <p className="text-xs text-gray-500 mb-2">Catégorie</p>
-        <div className="grid grid-cols-4 gap-2" role="radiogroup" aria-label="Catégorie">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              role="radio"
-              aria-checked={categoryId === cat.id}
-              aria-label={cat.name}
-              onClick={() => setCategoryId(cat.id)}
-              className={`flex flex-col items-center gap-1 py-2.5 rounded-xl border transition-colors cursor-pointer min-h-[60px] ${
-                categoryId === cat.id
-                  ? 'border-[#1D9E75] bg-[#E1F5EE]'
-                  : 'border-gray-200 bg-white'
-              }`}
-            >
-              <span className="text-lg" aria-hidden="true">{cat.icon}</span>
-              <span className="text-[10px] text-gray-700 truncate w-full text-center px-1">
-                {cat.name}
-              </span>
-            </button>
-          ))}
-        </div>
+        <p className="text-sm font-medium text-gray-700 mb-2">Catégorie</p>
+        {categories.length === 0 ? (
+          <div className="text-sm text-gray-500 bg-gray-50 rounded-xl p-4 text-center">
+            Aucune catégorie de {type === 'DEPENSE' ? 'dépense' : 'revenu'}.{' '}
+            <Link href="/profil/categories" className="text-[#1D9E75] font-medium underline">
+              Créer
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-4 gap-2" role="radiogroup" aria-label="Catégorie">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                role="radio"
+                aria-checked={categoryId === cat.id}
+                aria-label={cat.name}
+                onClick={() => setCategoryId(cat.id)}
+                className={`flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl border transition-colors cursor-pointer min-h-[72px] active:scale-95 ${
+                  categoryId === cat.id
+                    ? 'border-[#1D9E75] bg-[#E1F5EE]'
+                    : 'border-gray-200 bg-white'
+                }`}
+              >
+                <span className="text-xl" aria-hidden="true">
+                  {cat.icon}
+                </span>
+                <span className="text-xs text-gray-700 truncate w-full text-center px-1 leading-tight">
+                  {cat.name}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Date & Compte & Note */}
       <div className="px-4 mt-6 space-y-3">
         <div>
-          <label htmlFor="tx-date" className="block text-xs text-gray-500 mb-1">Date</label>
+          <label htmlFor="tx-date" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Date
+          </label>
           <input
             id="tx-date"
             type="date"
@@ -144,7 +192,9 @@ export function TransactionForm() {
         </div>
 
         <div>
-          <label htmlFor="tx-compte" className="block text-xs text-gray-500 mb-1">Compte</label>
+          <label htmlFor="tx-compte" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Compte
+          </label>
           <select
             id="tx-compte"
             value={compteId}
@@ -160,7 +210,9 @@ export function TransactionForm() {
         </div>
 
         <div>
-          <label htmlFor="tx-note" className="block text-xs text-gray-500 mb-1">Note (optionnel)</label>
+          <label htmlFor="tx-note" className="block text-sm font-medium text-gray-700 mb-1.5">
+            Note <span className="text-gray-400 font-normal">(optionnel)</span>
+          </label>
           <input
             id="tx-note"
             type="text"
@@ -172,12 +224,24 @@ export function TransactionForm() {
         </div>
       </div>
 
-      {/* Submit */}
-      <div className="px-4 mt-auto py-4">
+      {error && (
+        <div
+          role="alert"
+          className="mx-4 mt-4 px-3 py-2.5 rounded-lg bg-[#FAECE7] text-sm text-[#993C1D]"
+        >
+          {error}
+        </div>
+      )}
+
+      <div className="px-4 mt-auto pt-6 pb-4">
+        {missing && !submitting && (
+          <p className="text-xs text-gray-500 text-center mb-2">{missing}</p>
+        )}
         <button
           type="submit"
-          disabled={submitting || !amount || !categoryId || !compteId}
-          className="w-full h-12 bg-[#1D9E75] text-white rounded-xl font-medium text-base active:bg-[#0F6E56] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+          disabled={submitting || !!missing}
+          aria-busy={submitting}
+          className="w-full h-12 bg-[#1D9E75] text-white rounded-xl font-semibold text-base active:bg-[#0F6E56] active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
         >
           {submitting ? 'Enregistrement...' : 'Enregistrer'}
         </button>

@@ -61,7 +61,7 @@ export function TransactionList({
     <div className="flex-1 overflow-y-auto pb-4">
       {grouped.map((group) => (
         <div key={group.date}>
-          <p className="px-4 pt-3 pb-1.5 text-[10px] font-medium text-gray-500">
+          <p className="px-4 pt-4 pb-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">
             {group.date}
           </p>
           <div className="mx-4 bg-white border border-gray-200 rounded-xl overflow-hidden">
@@ -75,9 +75,10 @@ export function TransactionList({
       ))}
       {hasMore && (
         <button
+          type="button"
           onClick={onLoadMore}
           disabled={loading}
-          className="w-full py-3 text-sm text-[#1D9E75] font-medium disabled:opacity-50"
+          className="w-full min-h-[48px] mt-3 py-3 text-sm text-[#1D9E75] font-semibold disabled:opacity-50 active:bg-[#E1F5EE] transition-colors"
         >
           {loading ? 'Chargement...' : 'Charger plus'}
         </button>
