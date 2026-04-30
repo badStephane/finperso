@@ -67,24 +67,24 @@ export function ConfirmDialog({
         style={{ animation: 'fadeIn 200ms ease-out' }}
       />
       <div
-        className="relative w-full sm:max-w-sm bg-white rounded-2xl shadow-xl p-5"
+        className="relative w-full sm:max-w-sm bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-5"
         style={{
           animation: 'sheetUp 220ms cubic-bezier(0.16, 1, 0.3, 1)',
           marginBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
       >
-        <h2 id="confirm-title" className="text-base font-semibold text-gray-900">
+        <h2 id="confirm-title" className="text-base font-semibold text-gray-900 dark:text-gray-100">
           {title}
         </h2>
         {description && (
-          <p className="mt-2 text-sm text-gray-600 leading-relaxed">{description}</p>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
         )}
         <div className="mt-5 flex gap-3">
           <button
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 h-12 px-4 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 active:bg-gray-50 disabled:opacity-50 transition-colors"
+            className="flex-1 h-12 px-4 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 active:bg-gray-50 dark:active:bg-gray-800 disabled:opacity-50 transition-colors"
           >
             {cancelLabel}
           </button>

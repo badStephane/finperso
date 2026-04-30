@@ -22,7 +22,7 @@ export function QuickAdd({ comptes }: QuickAddProps) {
 
   return (
     <div className="mt-5">
-      <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+      <p className="px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
         Saisie rapide
       </p>
       <div
@@ -36,7 +36,7 @@ export function QuickAdd({ comptes }: QuickAddProps) {
             href={`/transactions/new?compteId=${c.id}`}
             role="listitem"
             aria-label={`Nouvelle dépense sur ${c.name}`}
-            className="flex items-center gap-2 h-11 pl-2.5 pr-3 rounded-full bg-white border border-gray-200 active:bg-gray-50 transition-colors flex-shrink-0"
+            className="flex items-center gap-2 h-11 pl-2.5 pr-3 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 active:bg-gray-50 dark:active:bg-gray-800 transition-colors flex-shrink-0"
           >
             <span
               className="w-7 h-7 rounded-full flex items-center justify-center text-base flex-shrink-0"
@@ -45,12 +45,12 @@ export function QuickAdd({ comptes }: QuickAddProps) {
             >
               {TYPE_ICON[c.type]}
             </span>
-            <span className="text-sm font-medium text-gray-900 whitespace-nowrap">
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">
               {c.name}
             </span>
             <Plus
               size={16}
-              className="text-[#1D9E75] -mr-0.5"
+              className="text-[#1D9E75] dark:text-[#2BB68B] -mr-0.5"
               aria-hidden="true"
             />
           </Link>

@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Class-based dark variant. Tailwind v4 defaults to a media query — we want
+ * an explicit class so the user can override their OS preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #f9fafb;
   --foreground: #111827;
@@ -18,6 +22,23 @@
   --dur-fast: 160ms;
   --dur-base: 240ms;
   --dur-slow: 320ms;
+}
+
+.dark {
+  --background: #0b0f0d;
+  --foreground: #e8edeb;
+  /* Primary palette stays warm-readable on dark too */
+  --color-primary: #2BB68B;
+  --color-primary-dark: #1D9E75;
+  --color-primary-darker: #16835F;
+  --color-primary-light: #0F2B23;
+  --color-danger: #E47B57;
+  --color-danger-bg: #2A130B;
+  --color-danger-text: #F0997B;
+}
+
+html {
+  background: var(--background);
 }
 
 @theme inline {

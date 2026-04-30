@@ -85,7 +85,7 @@ export function BottomSheet({ open, onClose, title, children, maxHeight = '90vh'
       />
       <div
         ref={sheetRef}
-        className="relative w-full bg-white rounded-t-2xl shadow-xl flex flex-col"
+        className="relative w-full bg-white dark:bg-gray-900 rounded-t-2xl shadow-xl flex flex-col"
         style={{
           maxHeight,
           animation: 'sheetUp 280ms cubic-bezier(0.16, 1, 0.3, 1)',
@@ -99,11 +99,11 @@ export function BottomSheet({ open, onClose, title, children, maxHeight = '90vh'
           className="pt-3 pb-2 flex flex-col items-center cursor-grab touch-none"
           aria-hidden="true"
         >
-          <div className="w-10 h-1 rounded-full bg-gray-300" />
+          <div className="w-10 h-1 rounded-full bg-gray-300 dark:bg-gray-600" />
         </div>
         {title && (
-          <div className="px-5 pb-3 border-b border-gray-100">
-            <h2 className="text-base font-semibold text-gray-900">{title}</h2>
+          <div className="px-5 pb-3 border-b border-gray-100 dark:border-gray-800">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
           </div>
         )}
         <div className="overflow-y-auto px-5 py-4">{children}</div>

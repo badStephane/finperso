@@ -19,7 +19,7 @@ export function PageHeader({ title, action, back }: PageHeaderProps) {
 
   return (
     <div
-      className="sticky top-0 z-40 bg-white border-b border-gray-200 flex items-center gap-2 px-2 sm:px-4"
+      className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2 px-2 sm:px-4"
       style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
     >
       <div className="flex items-center justify-between w-full h-14">
@@ -29,12 +29,12 @@ export function PageHeader({ title, action, back }: PageHeaderProps) {
               type="button"
               onClick={handleBack}
               aria-label="Retour"
-              className="-ml-1 w-11 h-11 flex items-center justify-center rounded-lg text-gray-700 active:bg-gray-100 transition-colors shrink-0"
+              className="-ml-1 w-11 h-11 flex items-center justify-center rounded-lg text-gray-700 dark:text-gray-300 active:bg-gray-100 dark:active:bg-gray-800 transition-colors shrink-0"
             >
               <ChevronLeft className="w-6 h-6" strokeWidth={2.2} />
             </button>
           )}
-          <h1 className={`text-base font-medium text-gray-900 truncate ${back ? '' : 'pl-2'}`}>
+          <h1 className={`text-base font-medium text-gray-900 dark:text-gray-100 truncate ${back ? '' : 'pl-2'}`}>
             {title}
           </h1>
         </div>

@@ -43,7 +43,7 @@ export function PendingRecurrences() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mx-3 mt-3 w-[calc(100%-1.5rem)] flex items-center gap-3 px-4 py-3 bg-[#FAEEDA] border border-[#E5C58E] rounded-xl active:scale-[0.99] transition-transform"
+        className="mx-3 mt-3 w-[calc(100%-1.5rem)] flex items-center gap-3 px-4 py-3 bg-[#FAEEDA] dark:bg-[#3A2810] border border-[#E5C58E] dark:border-[#7B5119] rounded-xl active:scale-[0.99] transition-transform"
       >
         <span
           className="w-9 h-9 rounded-full bg-[#BA7517] flex items-center justify-center text-white flex-shrink-0"
@@ -52,10 +52,10 @@ export function PendingRecurrences() {
           <Bell size={16} />
         </span>
         <div className="flex-1 min-w-0 text-left">
-          <p className="text-sm font-semibold text-[#5C3A0F]">
+          <p className="text-sm font-semibold text-[#5C3A0F] dark:text-[#F0CB8E]">
             {due.length} échéance{due.length > 1 ? 's' : ''} à valider
           </p>
-          <p className="text-xs text-[#7B5119] tabular-nums truncate">
+          <p className="text-xs text-[#7B5119] dark:text-[#D9A86A] tabular-nums truncate">
             {total >= 0 ? '+' : '−'}
             {formatCFA(Math.abs(total))} au total
           </p>
@@ -67,7 +67,7 @@ export function PendingRecurrences() {
           {due.map((rec) => (
             <div
               key={rec.id}
-              className="border border-gray-200 rounded-xl p-3 bg-white"
+              className="border border-gray-200 dark:border-gray-700 rounded-xl p-3 bg-white dark:bg-gray-800"
             >
               <div className="flex items-center gap-3">
                 <div
@@ -78,15 +78,15 @@ export function PendingRecurrences() {
                   {rec.categoryIcon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{rec.name}</p>
-                  <p className="text-xs text-gray-500 truncate mt-0.5">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{rec.name}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
                     {rec.compteName} ·{' '}
                     {format(rec.nextDueDate.toDate(), 'd MMM', { locale: fr })}
                   </p>
                 </div>
                 <span
                   className={`text-sm font-semibold tabular-nums shrink-0 ${
-                    rec.type === 'DEPENSE' ? 'text-[#993C1D]' : 'text-[#0F6E56]'
+                    rec.type === 'DEPENSE' ? 'text-[#993C1D] dark:text-[#F0997B]' : 'text-[#0F6E56] dark:text-[#2BB68B]'
                   }`}
                 >
                   {rec.type === 'DEPENSE' ? '−' : '+'}
@@ -98,7 +98,7 @@ export function PendingRecurrences() {
                   type="button"
                   onClick={() => handleSkip(rec)}
                   disabled={busyId === rec.id}
-                  className="flex-1 h-11 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 active:bg-gray-50 disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  className="flex-1 h-11 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 active:bg-gray-50 dark:active:bg-gray-700 disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   <Clock size={16} />
                   Passer

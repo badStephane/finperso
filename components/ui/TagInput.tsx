@@ -88,13 +88,13 @@ export function TagInput({
   return (
     <div className="relative">
       <div
-        className="min-h-12 px-2 py-1.5 flex flex-wrap items-center gap-1.5 border border-gray-200 rounded-xl bg-white focus-within:ring-2 focus-within:ring-[#1D9E75] focus-within:border-transparent transition-shadow"
+        className="min-h-12 px-2 py-1.5 flex flex-wrap items-center gap-1.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 focus-within:ring-2 focus-within:ring-[#1D9E75] focus-within:border-transparent transition-shadow"
         onClick={() => inputRef.current?.focus()}
       >
         {value.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 h-8 pl-2.5 pr-1 rounded-full bg-[#E1F5EE] text-[#085041] text-xs font-medium"
+            className="inline-flex items-center gap-1 h-8 pl-2.5 pr-1 rounded-full bg-[#E1F5EE] dark:bg-[#0F2B23] text-[#085041] dark:text-[#9FE3C4] text-xs font-medium"
           >
             {tag}
             <button
@@ -126,12 +126,12 @@ export function TagInput({
           autoCapitalize="none"
           autoCorrect="off"
           spellCheck={false}
-          className="flex-1 min-w-[80px] h-9 px-1 text-sm bg-transparent focus:outline-none disabled:cursor-not-allowed"
+          className="flex-1 min-w-[80px] h-9 px-1 text-sm bg-transparent text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none disabled:cursor-not-allowed"
         />
       </div>
       {filteredSuggestions.length > 0 && (
         <div
-          className="absolute left-0 right-0 top-full mt-1 z-20 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
+          className="absolute left-0 right-0 top-full mt-1 z-20 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden"
           role="listbox"
         >
           {filteredSuggestions.map((s) => (
@@ -142,7 +142,7 @@ export function TagInput({
               onClick={() => commit(s)}
               role="option"
               aria-selected="false"
-              className="w-full text-left px-3 py-2 text-sm text-gray-800 hover:bg-gray-50 active:bg-[#E1F5EE]"
+              className="w-full text-left px-3 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 active:bg-[#E1F5EE] dark:active:bg-[#0F2B23]"
             >
               {s}
             </button>

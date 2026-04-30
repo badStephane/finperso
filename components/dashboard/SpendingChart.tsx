@@ -24,8 +24,8 @@ export function SpendingChart({ budgets }: SpendingChartProps) {
 
   return (
     <div className="mx-4 mt-4">
-      <h2 className="text-base font-semibold text-gray-900 mb-2">Dépenses par catégorie</h2>
-      <div className="bg-white border border-gray-200 rounded-xl p-3">
+      <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">Dépenses par catégorie</h2>
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-3">
         <ResponsiveContainer width="100%" height={Math.max(140, data.length * 32)}>
           <BarChart data={data} layout="vertical" margin={{ left: 0, right: 8 }}>
             <XAxis type="number" hide />
@@ -33,7 +33,8 @@ export function SpendingChart({ budgets }: SpendingChartProps) {
               type="category"
               dataKey="name"
               width={120}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: 'currentColor' }}
+              className="text-gray-700 dark:text-gray-300 fill-current"
               tickLine={false}
               axisLine={false}
             />
@@ -44,7 +45,7 @@ export function SpendingChart({ budgets }: SpendingChartProps) {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-        <div className="flex flex-col gap-1 mt-3 pt-3 border-t border-gray-100">
+        <div className="flex flex-col gap-1 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
           {data.map((d, i) => (
             <div key={i} className="flex items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-2 min-w-0">
@@ -53,9 +54,9 @@ export function SpendingChart({ budgets }: SpendingChartProps) {
                   style={{ backgroundColor: COLORS[i % COLORS.length] }}
                   aria-hidden="true"
                 />
-                <span className="text-gray-600 truncate">{d.name}</span>
+                <span className="text-gray-600 dark:text-gray-400 truncate">{d.name}</span>
               </div>
-              <span className="font-medium text-gray-900 tabular-nums shrink-0">
+              <span className="font-medium text-gray-900 dark:text-gray-100 tabular-nums shrink-0">
                 {formatCFA(d.spent)}
               </span>
             </div>

@@ -88,11 +88,11 @@ export default function DashboardPage() {
   return (
     <div className="flex-1">
       <div
-        className="bg-white px-4 pb-3 border-b border-gray-200"
+        className="bg-white dark:bg-gray-900 px-4 pb-3 border-b border-gray-200 dark:border-gray-800"
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
       >
-        <p className="text-sm text-gray-500">Bonjour 👋</p>
-        <p className="text-base font-medium text-gray-900">{profile?.name}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Bonjour 👋</p>
+        <p className="text-base font-medium text-gray-900 dark:text-gray-100">{profile?.name}</p>
       </div>
 
       <BalanceCard comptes={comptes} monthStats={monthStats} />

@@ -75,7 +75,7 @@ export function TransactionItem({
           type="button"
           onClick={handleClick}
           aria-label={`Modifier ${tx.note || tx.categoryName}`}
-          className={`w-full flex items-center gap-3 px-3 py-3 bg-white min-h-[60px] text-left active:bg-gray-50 transition-[transform,background-color] duration-200 ease-out ${
+          className={`w-full flex items-center gap-3 px-3 py-3 bg-white dark:bg-gray-900 min-h-[60px] text-left active:bg-gray-50 dark:active:bg-gray-800 transition-[transform,background-color] duration-200 ease-out ${
             swiped ? '-translate-x-20' : ''
           }`}
           onTouchStart={handleTouchStart}
@@ -90,10 +90,10 @@ export function TransactionItem({
             {tx.categoryIcon}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
               {tx.note || tx.categoryName}
             </p>
-            <p className="text-xs text-gray-500 truncate mt-0.5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
               {tx.type === 'TRANSFERT'
                 ? `${tx.compteName} → ${tx.toCompteName ?? '?'}`
                 : `${tx.categoryName} · ${tx.compteName}`}
@@ -103,7 +103,7 @@ export function TransactionItem({
                 {tx.tags!.map((t) => (
                   <span
                     key={t}
-                    className="inline-flex items-center text-[10px] font-medium leading-none py-1 px-2 rounded-full bg-[#E1F5EE] text-[#085041]"
+                    className="inline-flex items-center text-[10px] font-medium leading-none py-1 px-2 rounded-full bg-[#E1F5EE] dark:bg-[#0F2B23] text-[#085041] dark:text-[#9FE3C4]"
                   >
                     {t}
                   </span>
@@ -114,10 +114,10 @@ export function TransactionItem({
           <span
             className={`text-sm font-semibold whitespace-nowrap tabular-nums shrink-0 ${
               tx.type === 'DEPENSE'
-                ? 'text-[#993C1D]'
+                ? 'text-[#993C1D] dark:text-[#F0997B]'
                 : tx.type === 'REVENU'
-                  ? 'text-[#0F6E56]'
-                  : 'text-gray-700'
+                  ? 'text-[#0F6E56] dark:text-[#2BB68B]'
+                  : 'text-gray-700 dark:text-gray-300'
             }`}
             aria-label={
               tx.type === 'DEPENSE'

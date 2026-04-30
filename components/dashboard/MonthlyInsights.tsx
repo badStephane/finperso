@@ -20,9 +20,21 @@ interface Insight {
 }
 
 const TONE_STYLES: Record<Tone, { bg: string; fg: string; iconBg: string }> = {
-  good: { bg: 'bg-[#E1F5EE]', fg: 'text-[#085041]', iconBg: 'bg-[#1D9E75]' },
-  warn: { bg: 'bg-[#FAECE7]', fg: 'text-[#993C1D]', iconBg: 'bg-[#D85A30]' },
-  info: { bg: 'bg-gray-50', fg: 'text-gray-700', iconBg: 'bg-gray-500' },
+  good: {
+    bg: 'bg-[#E1F5EE] dark:bg-[#0F2B23]',
+    fg: 'text-[#085041] dark:text-[#9FE3C4]',
+    iconBg: 'bg-[#1D9E75]',
+  },
+  warn: {
+    bg: 'bg-[#FAECE7] dark:bg-[#2A130B]',
+    fg: 'text-[#993C1D] dark:text-[#F0997B]',
+    iconBg: 'bg-[#D85A30]',
+  },
+  info: {
+    bg: 'bg-gray-50 dark:bg-gray-800',
+    fg: 'text-gray-700 dark:text-gray-300',
+    iconBg: 'bg-gray-500',
+  },
 }
 
 function buildInsights(stats: Record<string, MonthlyStats>): Insight[] {
@@ -99,7 +111,7 @@ export function MonthlyInsights({ stats }: MonthlyInsightsProps) {
 
   return (
     <div className="mx-4 mt-4">
-      <h2 className="text-base font-semibold text-gray-900 mb-2">Tendance</h2>
+      <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">Tendance</h2>
       <div className="space-y-2">
         {insights.map((ins, i) => {
           const style = TONE_STYLES[ins.tone]

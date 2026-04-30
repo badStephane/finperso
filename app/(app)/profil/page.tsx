@@ -12,6 +12,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { InstallPrompt } from '@/components/InstallPrompt'
 import { formatCFA } from '@/lib/utils/currency'
 import { exportTransactionsCSV, downloadCSV } from '@/lib/services/exportService'
+import { ThemeToggle } from '@/components/profil/ThemeToggle'
 import { CreditCard, Tag, Download, LogOut, ChevronRight, Loader2, Repeat } from 'lucide-react'
 
 const TYPE_LABELS: Record<string, string> = {
@@ -61,56 +62,56 @@ export default function ProfilPage() {
     <div className="flex flex-col flex-1">
       <PageHeader title="Profil" />
 
-      <div className="bg-white border-b border-gray-200 flex flex-col items-center py-6">
-        <div className="w-16 h-16 rounded-full bg-[#E1F5EE] flex items-center justify-center text-lg font-semibold text-[#085041]">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex flex-col items-center py-6">
+        <div className="w-16 h-16 rounded-full bg-[#E1F5EE] dark:bg-[#0F2B23] flex items-center justify-center text-lg font-semibold text-[#085041] dark:text-[#9FE3C4]">
           {initials || '?'}
         </div>
-        <p className="text-base font-semibold text-gray-900 mt-3">{profile?.name}</p>
-        <p className="text-sm text-gray-500 mt-0.5 truncate max-w-[80%]">{user?.email}</p>
+        <p className="text-base font-semibold text-gray-900 dark:text-gray-100 mt-3">{profile?.name}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 truncate max-w-[80%]">{user?.email}</p>
       </div>
 
       <div className="mx-4 mt-3">
         <InstallPrompt />
       </div>
 
-      <div className="mx-4 mt-3 grid grid-cols-3 bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="text-center py-3 px-1 border-r border-gray-200">
-          <p className="text-base font-semibold text-gray-900 tabular-nums">{comptes.length}</p>
-          <p className="text-xs text-gray-500 mt-0.5">comptes</p>
+      <div className="mx-4 mt-3 grid grid-cols-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+        <div className="text-center py-3 px-1 border-r border-gray-200 dark:border-gray-800">
+          <p className="text-base font-semibold text-gray-900 dark:text-gray-100 tabular-nums">{comptes.length}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">comptes</p>
         </div>
-        <div className="text-center py-3 px-1 border-r border-gray-200 min-w-0">
-          <p className="text-sm font-semibold text-gray-900 truncate tabular-nums">
+        <div className="text-center py-3 px-1 border-r border-gray-200 dark:border-gray-800 min-w-0">
+          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate tabular-nums">
             {formatCFA(comptes.reduce((s, c) => s + c.balance, 0))}
           </p>
-          <p className="text-xs text-gray-500 mt-0.5">solde total</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">solde total</p>
         </div>
         <div className="text-center py-3 px-1 min-w-0">
-          <p className="text-sm font-semibold text-gray-900 truncate">
+          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
             {profile?.createdAt
               ? new Date(profile.createdAt.seconds * 1000).toLocaleDateString('fr')
               : '-'}
           </p>
-          <p className="text-xs text-gray-500 mt-0.5">membre depuis</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">membre depuis</p>
         </div>
       </div>
 
       <div className="px-4 pt-5 pb-2 flex items-center justify-between">
-        <h2 className="text-base font-semibold text-gray-900">Mes comptes</h2>
+        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Mes comptes</h2>
         <Link
           href="/profil/comptes"
-          className="text-sm text-[#1D9E75] font-medium px-2 -mr-2 py-1.5 rounded-md active:bg-[#E1F5EE]"
+          className="text-sm text-[#1D9E75] dark:text-[#2BB68B] font-medium px-2 -mr-2 py-1.5 rounded-md active:bg-[#E1F5EE] dark:active:bg-[#0F2B23]"
         >
           Gérer
         </Link>
       </div>
-      <div className="mx-4 bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="mx-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
         {comptes.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-6">Aucun compte</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-6">Aucun compte</p>
         ) : (
           comptes.map((c) => (
             <div
               key={c.id}
-              className="flex items-center justify-between px-3 py-3 border-b border-gray-100 last:border-b-0 min-h-[56px]"
+              className="flex items-center justify-between px-3 py-3 border-b border-gray-100 dark:border-gray-800 last:border-b-0 min-h-[56px]"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <div
@@ -119,13 +120,13 @@ export default function ProfilPage() {
                   aria-hidden="true"
                 />
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{c.name}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{c.name}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                     {TYPE_LABELS[c.type] ?? c.type}
                   </p>
                 </div>
               </div>
-              <span className="text-sm font-semibold text-gray-900 tabular-nums shrink-0">
+              <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 tabular-nums shrink-0">
                 {formatCFA(c.balance)}
               </span>
             </div>
@@ -134,12 +135,19 @@ export default function ProfilPage() {
       </div>
 
       <div className="px-4 pt-5 pb-2">
-        <h2 className="text-base font-semibold text-gray-900">Paramètres</h2>
+        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Apparence</h2>
       </div>
-      <div className="mx-4 bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="mx-4">
+        <ThemeToggle />
+      </div>
+
+      <div className="px-4 pt-5 pb-2">
+        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">Paramètres</h2>
+      </div>
+      <div className="mx-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
         <Link
           href="/profil/comptes"
-          className="flex items-center justify-between px-3 py-3 border-b border-gray-100 active:bg-gray-50 min-h-[56px]"
+          className="flex items-center justify-between px-3 py-3 border-b border-gray-100 dark:border-gray-800 active:bg-gray-50 dark:active:bg-gray-800 min-h-[56px]"
         >
           <div className="flex items-center gap-3">
             <div
@@ -148,13 +156,13 @@ export default function ProfilPage() {
             >
               <CreditCard size={18} className="text-gray-700" />
             </div>
-            <span className="text-sm font-medium text-gray-900">Mes comptes</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Mes comptes</span>
           </div>
-          <ChevronRight size={18} className="text-gray-400" />
+          <ChevronRight size={18} className="text-gray-400 dark:text-gray-500" />
         </Link>
         <Link
           href="/profil/categories"
-          className="flex items-center justify-between px-3 py-3 border-b border-gray-100 active:bg-gray-50 min-h-[56px]"
+          className="flex items-center justify-between px-3 py-3 border-b border-gray-100 dark:border-gray-800 active:bg-gray-50 dark:active:bg-gray-800 min-h-[56px]"
         >
           <div className="flex items-center gap-3">
             <div
@@ -163,13 +171,13 @@ export default function ProfilPage() {
             >
               <Tag size={18} className="text-gray-700" />
             </div>
-            <span className="text-sm font-medium text-gray-900">Catégories</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Catégories</span>
           </div>
-          <ChevronRight size={18} className="text-gray-400" />
+          <ChevronRight size={18} className="text-gray-400 dark:text-gray-500" />
         </Link>
         <Link
           href="/profil/recurrences"
-          className="flex items-center justify-between px-3 py-3 border-b border-gray-100 active:bg-gray-50 min-h-[56px]"
+          className="flex items-center justify-between px-3 py-3 border-b border-gray-100 dark:border-gray-800 active:bg-gray-50 dark:active:bg-gray-800 min-h-[56px]"
         >
           <div className="flex items-center gap-3">
             <div
@@ -178,16 +186,16 @@ export default function ProfilPage() {
             >
               <Repeat size={18} className="text-gray-700" />
             </div>
-            <span className="text-sm font-medium text-gray-900">Récurrences</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Récurrences</span>
           </div>
-          <ChevronRight size={18} className="text-gray-400" />
+          <ChevronRight size={18} className="text-gray-400 dark:text-gray-500" />
         </Link>
         <button
           type="button"
           onClick={handleExport}
           disabled={exporting}
           aria-busy={exporting}
-          className="w-full flex items-center justify-between px-3 py-3 active:bg-gray-50 min-h-[56px] disabled:opacity-60"
+          className="w-full flex items-center justify-between px-3 py-3 active:bg-gray-50 dark:active:bg-gray-800 min-h-[56px] disabled:opacity-60"
         >
           <div className="flex items-center gap-3">
             <div
@@ -200,11 +208,11 @@ export default function ProfilPage() {
                 <Download size={18} className="text-gray-700" />
               )}
             </div>
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
               {exporting ? 'Export en cours...' : 'Exporter données'}
             </span>
           </div>
-          <ChevronRight size={18} className="text-gray-400" />
+          <ChevronRight size={18} className="text-gray-400 dark:text-gray-500" />
         </button>
       </div>
 

@@ -72,7 +72,7 @@ export default function TransactionsPage() {
       {isSearching && transactions.length > 0 && (
         <p
           aria-live="polite"
-          className="px-4 py-2 text-xs text-gray-500 bg-white border-b border-gray-100 tabular-nums"
+          className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 tabular-nums"
         >
           {filtered.length === 0
             ? `Aucun résultat${hasMore ? ' — chargez plus pour étendre la recherche' : ''}`

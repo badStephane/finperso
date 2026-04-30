@@ -14,7 +14,7 @@ export function Card({ children, className = '', onClick, ariaLabel }: CardProps
         type="button"
         onClick={onClick}
         aria-label={ariaLabel}
-        className={`block w-full text-left bg-white border border-gray-200 rounded-xl p-4 active:bg-gray-50 active:scale-[0.99] transition-all ${className}`}
+        className={`block w-full text-left bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 active:bg-gray-50 dark:active:bg-gray-800 active:scale-[0.99] transition-all ${className}`}
       >
         {children}
       </button>
@@ -22,7 +22,7 @@ export function Card({ children, className = '', onClick, ariaLabel }: CardProps
   }
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-xl p-4 ${className}`}>
+    <div className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 ${className}`}>
       {children}
     </div>
   )

@@ -29,7 +29,7 @@ export function TransactionFilterBar({
 
   return (
     <div
-      className="flex gap-2 px-4 py-3 bg-white border-b border-gray-200 overflow-x-auto scrollbar-hide"
+      className="flex gap-2 px-4 py-3 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 overflow-x-auto scrollbar-hide"
       role="toolbar"
       aria-label="Filtres"
     >
@@ -43,15 +43,15 @@ export function TransactionFilterBar({
             aria-pressed={active}
             className={`${chipBase} ${
               active
-                ? 'bg-[#E1F5EE] border-[#1D9E75] text-[#085041]'
-                : 'bg-white border-gray-200 text-gray-600'
+                ? 'bg-[#E1F5EE] dark:bg-[#0F2B23] border-[#1D9E75] text-[#085041] dark:text-[#9FE3C4]'
+                : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400'
             }`}
           >
             {chip.label}
           </button>
         )
       })}
-      <div className="w-px bg-gray-200 flex-shrink-0 mx-0.5 self-stretch" aria-hidden="true" />
+      <div className="w-px bg-gray-200 dark:bg-gray-700 flex-shrink-0 mx-0.5 self-stretch" aria-hidden="true" />
       {categories.map((cat) => {
         const active = activeCategoryId === cat.id
         return (
@@ -62,8 +62,8 @@ export function TransactionFilterBar({
             aria-pressed={active}
             className={`${chipBase} gap-1.5 ${
               active
-                ? 'bg-[#E1F5EE] border-[#1D9E75] text-[#085041]'
-                : 'bg-white border-gray-200 text-gray-600'
+                ? 'bg-[#E1F5EE] dark:bg-[#0F2B23] border-[#1D9E75] text-[#085041] dark:text-[#9FE3C4]'
+                : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400'
             }`}
           >
             <span aria-hidden="true">{cat.icon}</span>
