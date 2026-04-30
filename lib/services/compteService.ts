@@ -27,6 +27,16 @@ export async function addCompte(
   return ref.id
 }
 
+export async function updateCompte(
+  userId: string,
+  compteId: string,
+  data: { name: string; type: CompteType; color: string }
+) {
+  const batch = writeBatch(db)
+  batch.update(doc(db, `users/${userId}/comptes/${compteId}`), data)
+  await batch.commit()
+}
+
 export async function deleteCompte(userId: string, compteId: string) {
   const batch = writeBatch(db)
   batch.delete(doc(db, `users/${userId}/comptes/${compteId}`))
