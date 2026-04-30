@@ -14,6 +14,7 @@ interface TransactionListProps {
   hasMore: boolean
   onLoadMore: () => void
   onDelete: (transaction: Transaction) => void
+  onEdit?: (transaction: Transaction) => void
 }
 
 export function TransactionList({
@@ -22,6 +23,7 @@ export function TransactionList({
   hasMore,
   onLoadMore,
   onDelete,
+  onEdit,
 }: TransactionListProps) {
   const grouped = useMemo(() => {
     const groups: { date: string; items: Transaction[] }[] = []
@@ -67,7 +69,7 @@ export function TransactionList({
           <div className="mx-4 bg-white border border-gray-200 rounded-xl overflow-hidden">
             {group.items.map((tx) => (
               <div key={tx.id} className="border-b border-gray-100 last:border-b-0">
-                <TransactionItem transaction={tx} onDelete={onDelete} />
+                <TransactionItem transaction={tx} onDelete={onDelete} onTap={onEdit} />
               </div>
             ))}
           </div>

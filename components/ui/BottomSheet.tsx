@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 interface BottomSheetProps {
   open: boolean
@@ -15,6 +16,11 @@ export function BottomSheet({ open, onClose, title, children, maxHeight = '90vh'
   const sheetRef = useRef<HTMLDivElement>(null)
   const startY = useRef<number | null>(null)
   const currentY = useRef(0)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     if (!open) return
@@ -33,7 +39,7 @@ export function BottomSheet({ open, onClose, title, children, maxHeight = '90vh'
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
 
-  if (!open) return null
+  if (!open || !mounted) return null
 
   const handleTouchStart = (e: React.TouchEvent) => {
     startY.current = e.touches[0].clientY
@@ -63,7 +69,7 @@ export function BottomSheet({ open, onClose, title, children, maxHeight = '90vh'
     currentY.current = 0
   }
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -102,6 +108,7 @@ export function BottomSheet({ open, onClose, title, children, maxHeight = '90vh'
         )}
         <div className="overflow-y-auto px-5 py-4">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
