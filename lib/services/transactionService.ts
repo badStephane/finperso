@@ -51,16 +51,34 @@ export async function addTransaction(
 
   const monthKey = format(data.date, 'yyyy-MM')
   const userRef = doc(db, `users/${userId}`)
+  // set + merge so we self-heal users whose root doc was never seeded
+  // (early signups, migrated accounts) instead of failing the whole batch.
   if (data.type === 'DEPENSE') {
-    batch.update(userRef, {
-      [`monthlyStats.${monthKey}.totalDepenses`]: increment(data.amount),
-      [`monthlyStats.${monthKey}.solde`]: increment(-data.amount),
-    })
+    batch.set(
+      userRef,
+      {
+        monthlyStats: {
+          [monthKey]: {
+            totalDepenses: increment(data.amount),
+            solde: increment(-data.amount),
+          },
+        },
+      },
+      { merge: true }
+    )
   } else {
-    batch.update(userRef, {
-      [`monthlyStats.${monthKey}.totalRevenus`]: increment(data.amount),
-      [`monthlyStats.${monthKey}.solde`]: increment(data.amount),
-    })
+    batch.set(
+      userRef,
+      {
+        monthlyStats: {
+          [monthKey]: {
+            totalRevenus: increment(data.amount),
+            solde: increment(data.amount),
+          },
+        },
+      },
+      { merge: true }
+    )
   }
 
   if (data.type === 'DEPENSE') {
@@ -141,15 +159,31 @@ export async function deleteTransaction(
   const monthKey = format(transaction.date.toDate(), 'yyyy-MM')
   const userRef = doc(db, `users/${userId}`)
   if (transaction.type === 'DEPENSE') {
-    batch.update(userRef, {
-      [`monthlyStats.${monthKey}.totalDepenses`]: increment(-transaction.amount),
-      [`monthlyStats.${monthKey}.solde`]: increment(transaction.amount),
-    })
+    batch.set(
+      userRef,
+      {
+        monthlyStats: {
+          [monthKey]: {
+            totalDepenses: increment(-transaction.amount),
+            solde: increment(transaction.amount),
+          },
+        },
+      },
+      { merge: true }
+    )
   } else {
-    batch.update(userRef, {
-      [`monthlyStats.${monthKey}.totalRevenus`]: increment(-transaction.amount),
-      [`monthlyStats.${monthKey}.solde`]: increment(-transaction.amount),
-    })
+    batch.set(
+      userRef,
+      {
+        monthlyStats: {
+          [monthKey]: {
+            totalRevenus: increment(-transaction.amount),
+            solde: increment(-transaction.amount),
+          },
+        },
+      },
+      { merge: true }
+    )
   }
 
   if (transaction.type === 'DEPENSE') {
