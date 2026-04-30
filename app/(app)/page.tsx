@@ -10,22 +10,24 @@ import { BalanceCard } from '@/components/dashboard/BalanceCard'
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions'
 import { SpendingChart } from '@/components/dashboard/SpendingChart'
 import { SkeletonCard } from '@/components/ui/SkeletonLoader'
-import { useToastStore } from '@/stores/toastStore'
+import { ErrorState } from '@/components/ui/ErrorState'
 import type { Transaction, Budget } from '@/types'
 
 export default function DashboardPage() {
   const { user, profile } = useAuth()
   const { comptes } = useComptes()
-  const toast = useToastStore((s) => s.show)
   const [recentTx, setRecentTx] = useState<Transaction[]>([])
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const monthKey = getMonthKey(new Date())
   const monthStats = profile?.monthlyStats?.[monthKey]
 
-  useEffect(() => {
+  const load = () => {
     if (!user) return
+    setLoading(true)
+    setError(null)
 
     const now = new Date()
     const month = now.getMonth() + 1
@@ -53,12 +55,17 @@ export default function DashboardPage() {
         setBudgets(budgetSnap.docs.map((d) => ({ id: d.id, ...d.data() }) as Budget))
       })
       .catch(() => {
-        toast('Erreur de chargement', 'error')
+        setError('load')
       })
       .finally(() => {
         setLoading(false)
       })
-  }, [user, toast])
+  }
+
+  useEffect(() => {
+    load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   if (loading) {
     return (
@@ -70,10 +77,14 @@ export default function DashboardPage() {
     )
   }
 
+  if (error) {
+    return <ErrorState onRetry={load} />
+  }
+
   return (
     <div className="flex-1">
       <div className="bg-white px-4 py-3 border-b border-gray-200">
-        <p className="text-xs text-gray-500">Bonjour 👋</p>
+        <p className="text-sm text-gray-500">Bonjour 👋</p>
         <p className="text-base font-medium text-gray-900">{profile?.name}</p>
       </div>
 

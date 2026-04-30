@@ -23,32 +23,42 @@ export function SpendingChart({ budgets }: SpendingChartProps) {
   if (data.length === 0) return null
 
   return (
-    <div className="mx-4 mt-2">
-      <h2 className="text-sm font-medium text-gray-900 mb-3">Dépenses par catégorie</h2>
+    <div className="mx-4 mt-4">
+      <h2 className="text-base font-semibold text-gray-900 mb-2">Dépenses par catégorie</h2>
       <div className="bg-white border border-gray-200 rounded-xl p-3">
-        <ResponsiveContainer width="100%" height={160}>
+        <ResponsiveContainer width="100%" height={Math.max(140, data.length * 32)}>
           <BarChart data={data} layout="vertical" margin={{ left: 0, right: 8 }}>
             <XAxis type="number" hide />
             <YAxis
               type="category"
               dataKey="name"
-              width={100}
-              tick={{ fontSize: 11 }}
+              width={120}
+              tick={{ fontSize: 12 }}
               tickLine={false}
               axisLine={false}
             />
-            <Bar dataKey="spent" radius={[0, 4, 4, 0]} barSize={14}>
+            <Bar dataKey="spent" radius={[0, 4, 4, 0]} barSize={18}>
               {data.map((_, i) => (
                 <Cell key={i} fill={COLORS[i % COLORS.length]} />
               ))}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 px-1">
+        <div className="flex flex-col gap-1 mt-3 pt-3 border-t border-gray-100">
           {data.map((d, i) => (
-            <span key={i} className="text-[10px] text-gray-500">
-              {d.name}: {formatCFA(d.spent)}
-            </span>
+            <div key={i} className="flex items-center justify-between gap-2 text-xs">
+              <div className="flex items-center gap-2 min-w-0">
+                <span
+                  className="w-2.5 h-2.5 rounded-sm shrink-0"
+                  style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                  aria-hidden="true"
+                />
+                <span className="text-gray-600 truncate">{d.name}</span>
+              </div>
+              <span className="font-medium text-gray-900 tabular-nums shrink-0">
+                {formatCFA(d.spent)}
+              </span>
+            </div>
           ))}
         </div>
       </div>
