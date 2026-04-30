@@ -11,7 +11,6 @@ export function useAuth() {
   const { user, profile, loading, setUser, setProfile, setLoading } = useAuthStore()
 
   useEffect(() => {
-    setLoading(true)
     const unsubAuth = onAuthChange((firebaseUser) => {
       setUser(firebaseUser)
       if (!firebaseUser) {
@@ -20,6 +19,7 @@ export function useAuth() {
         return
       }
 
+      setLoading(true)
       const unsubProfile = onSnapshot(
         doc(db, `users/${firebaseUser.uid}`),
         (snap) => {
