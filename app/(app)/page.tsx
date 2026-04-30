@@ -83,7 +83,10 @@ export default function DashboardPage() {
 
   return (
     <div className="flex-1">
-      <div className="bg-white px-4 py-3 border-b border-gray-200">
+      <div
+        className="bg-white px-4 pb-3 border-b border-gray-200"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
+      >
         <p className="text-sm text-gray-500">Bonjour 👋</p>
         <p className="text-base font-medium text-gray-900">{profile?.name}</p>
       </div>
