@@ -39,10 +39,7 @@ export function TransactionFilterBar({
           <button
             key={chip.label}
             type="button"
-            onClick={() => {
-              onTypeChange(chip.value)
-              onCategoryChange(undefined)
-            }}
+            onClick={() => onTypeChange(chip.value)}
             aria-pressed={active}
             className={`${chipBase} ${
               active
@@ -61,10 +58,7 @@ export function TransactionFilterBar({
           <button
             key={cat.id}
             type="button"
-            onClick={() => {
-              onCategoryChange(active ? undefined : cat.id)
-              onTypeChange(undefined)
-            }}
+            onClick={() => onCategoryChange(active ? undefined : cat.id)}
             aria-pressed={active}
             className={`${chipBase} gap-1.5 ${
               active
