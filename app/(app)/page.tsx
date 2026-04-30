@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useComptes } from '@/hooks/useComptes'
 import { getMonthKey } from '@/lib/utils/dates'
 import { BalanceCard } from '@/components/dashboard/BalanceCard'
+import { MonthlyTrend } from '@/components/dashboard/MonthlyTrend'
 import { PendingRecurrences } from '@/components/dashboard/PendingRecurrences'
 import { QuickAdd } from '@/components/dashboard/QuickAdd'
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions'
@@ -97,6 +98,7 @@ export default function DashboardPage() {
       <PendingRecurrences />
       <QuickAdd comptes={comptes} />
       <RecentTransactions transactions={recentTx} />
+      <MonthlyTrend stats={profile?.monthlyStats} />
       <SpendingChart budgets={budgets} />
       <div className="h-4" />
     </div>
