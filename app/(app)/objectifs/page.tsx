@@ -9,6 +9,7 @@ import { GoalCard } from '@/components/objectifs/GoalCard'
 import { GoalForm } from '@/components/objectifs/GoalForm'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { SkeletonCard } from '@/components/ui/SkeletonLoader'
+import { BottomSheet } from '@/components/ui/BottomSheet'
 import { Target, Plus } from 'lucide-react'
 
 export default function ObjectifsPage() {
@@ -60,31 +61,23 @@ export default function ObjectifsPage() {
             />
           ))}
           <button
+            type="button"
             onClick={() => setShowForm(true)}
-            className="w-full flex items-center justify-center gap-2 py-3 border border-dashed border-gray-300 rounded-xl text-sm text-gray-500"
+            className="w-full flex items-center justify-center gap-2 min-h-[48px] py-3 border border-dashed border-gray-300 rounded-xl text-sm font-medium text-gray-600 active:bg-gray-50 transition-colors"
           >
-            <Plus size={16} />
+            <Plus size={18} />
             Nouvel objectif
           </button>
         </div>
       )}
 
-      {showForm && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-end">
-          <div className="w-full bg-white rounded-t-2xl max-h-[85vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-4 pt-4 pb-2">
-              <h2 className="text-base font-medium">Nouvel objectif</h2>
-              <button
-                onClick={() => setShowForm(false)}
-                className="text-sm text-gray-500"
-              >
-                Fermer
-              </button>
-            </div>
-            <GoalForm onClose={() => setShowForm(false)} />
-          </div>
-        </div>
-      )}
+      <BottomSheet
+        open={showForm}
+        onClose={() => setShowForm(false)}
+        title="Nouvel objectif"
+      >
+        <GoalForm onClose={() => setShowForm(false)} />
+      </BottomSheet>
     </div>
   )
 }

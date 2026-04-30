@@ -12,42 +12,51 @@ interface GoalCardProps {
 }
 
 export function GoalCard({ objectif, onClick }: GoalCardProps) {
-  const pct = objectif.targetAmount > 0
-    ? Math.round((objectif.currentAmount / objectif.targetAmount) * 100)
-    : 0
+  const pct =
+    objectif.targetAmount > 0
+      ? Math.round((objectif.currentAmount / objectif.targetAmount) * 100)
+      : 0
+
+  const tintBg = `${objectif.color}1A`
 
   return (
-    <div
-      className="bg-white border border-gray-200 rounded-xl p-3 cursor-pointer active:bg-gray-50"
+    <button
+      type="button"
       onClick={onClick}
+      className="block w-full text-left bg-white border border-gray-200 rounded-xl p-4 active:bg-gray-50 active:scale-[0.99] transition-all"
     >
       <div className="flex items-center gap-3 mb-3">
         <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-base flex-shrink-0"
-          style={{ backgroundColor: objectif.color + '20' }}
+          className="w-11 h-11 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
+          style={{ backgroundColor: tintBg }}
+          aria-hidden="true"
         >
           {objectif.icon}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-900 truncate">{objectif.name}</p>
+          <p className="text-sm font-semibold text-gray-900 truncate">{objectif.name}</p>
           {objectif.deadline && (
-            <p className="text-[10px] text-gray-500">
+            <p className="text-xs text-gray-500 mt-0.5">
               Objectif : {format(objectif.deadline.toDate(), 'MMM yyyy', { locale: fr })}
             </p>
           )}
         </div>
         <span
-          className="text-sm font-medium"
+          className="text-base font-semibold tabular-nums shrink-0"
           style={{ color: pct >= 80 ? '#0F6E56' : objectif.color }}
         >
           {pct}%
         </span>
       </div>
-      <ProgressBar value={objectif.currentAmount} max={objectif.targetAmount} color={objectif.color} />
-      <div className="flex justify-between mt-2 text-[10px] text-gray-500">
-        <span>{formatCFA(objectif.currentAmount)} épargnés</span>
-        <span>{formatCFA(objectif.targetAmount)} cible</span>
+      <ProgressBar
+        value={objectif.currentAmount}
+        max={objectif.targetAmount}
+        color={objectif.color}
+      />
+      <div className="flex justify-between mt-2 text-xs text-gray-500">
+        <span className="tabular-nums">{formatCFA(objectif.currentAmount)} épargnés</span>
+        <span className="tabular-nums">{formatCFA(objectif.targetAmount)} cible</span>
       </div>
-    </div>
+    </button>
   )
 }
