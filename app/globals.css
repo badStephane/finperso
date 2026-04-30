@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
 /* Class-based dark variant. Tailwind v4 defaults to a media query — we want
- * an explicit class so the user can override their OS preference. */
-@custom-variant dark (&:where(.dark, .dark *));
+ * an explicit class so the user can override their OS preference.
+ *
+ * The block syntax is honored by both Turbopack (dev) and the prod compiler;
+ * the inline `(...)` short form was silently ignored by Turbopack. */
+@custom-variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
+}
 
 :root {
   --background: #f9fafb;
