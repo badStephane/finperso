@@ -98,6 +98,18 @@ export function TransactionItem({
                 ? `${tx.compteName} → ${tx.toCompteName ?? '?'}`
                 : `${tx.categoryName} · ${tx.compteName}`}
             </p>
+            {(tx.tags?.length ?? 0) > 0 && (
+              <div className="flex flex-wrap gap-1 mt-1">
+                {tx.tags!.map((t) => (
+                  <span
+                    key={t}
+                    className="inline-flex items-center text-[10px] font-medium leading-none py-1 px-2 rounded-full bg-[#E1F5EE] text-[#085041]"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
           <span
             className={`text-sm font-semibold whitespace-nowrap tabular-nums shrink-0 ${

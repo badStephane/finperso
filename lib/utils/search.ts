@@ -28,6 +28,7 @@ export function matchesTransaction(tx: Transaction, rawQuery: string): boolean {
     tx.categoryName,
     tx.compteName,
     tx.toCompteName ?? '',
+    ...(tx.tags ?? []),
   ]
   return fields.some((f) => normalize(f).includes(q))
 }

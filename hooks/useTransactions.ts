@@ -77,7 +77,7 @@ export function useTransactions() {
   const update = useCallback(
     async (
       transaction: Transaction,
-      newData: { amount: number; note: string | null }
+      newData: { amount: number; note: string | null; tags?: string[] }
     ) => {
       if (!user) throw new Error('Not authenticated')
       try {

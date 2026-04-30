@@ -139,14 +139,16 @@ export async function updateTransaction(
   userId: string,
   txId: string,
   oldTx: Transaction,
-  newData: { amount: number; note: string | null }
+  newData: { amount: number; note: string | null; tags?: string[] }
 ) {
   const batch = writeBatch(db)
   const txRef = doc(db, `users/${userId}/transactions/${txId}`)
-  batch.update(txRef, {
+  const updates: Record<string, unknown> = {
     amount: newData.amount,
     note: newData.note,
-  })
+  }
+  if (newData.tags !== undefined) updates.tags = newData.tags
+  batch.update(txRef, updates)
 
   const amountDelta = newData.amount - oldTx.amount
   if (amountDelta === 0) {

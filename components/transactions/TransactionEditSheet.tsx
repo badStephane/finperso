@@ -1,8 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { BottomSheet } from '@/components/ui/BottomSheet'
+import { TagInput } from '@/components/ui/TagInput'
 import { useTransactions } from '@/hooks/useTransactions'
+import { useTransactionStore } from '@/stores/transactionStore'
 import { useToastStore } from '@/stores/toastStore'
 import { formatCFA } from '@/lib/utils/currency'
 import type { Transaction } from '@/types'
@@ -27,13 +29,31 @@ export function TransactionEditSheet({
   const showToast = useToastStore((s) => s.show)
   const [amount, setAmount] = useState('')
   const [note, setNote] = useState('')
+  const [tags, setTags] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const knownTransactions = useTransactionStore((s) => s.transactions)
+  const tagSuggestions = useMemo(() => {
+    const seen = new Set<string>()
+    const out: string[] = []
+    for (const tx of knownTransactions) {
+      for (const t of tx.tags ?? []) {
+        const key = t.toLowerCase()
+        if (!seen.has(key)) {
+          seen.add(key)
+          out.push(t)
+        }
+      }
+    }
+    return out
+  }, [knownTransactions])
 
   useEffect(() => {
     if (!transaction) return
     setAmount(String(transaction.amount))
     setNote(transaction.note ?? '')
+    setTags(transaction.tags ?? [])
     setError(null)
   }, [transaction])
 
@@ -50,7 +70,11 @@ export function TransactionEditSheet({
     setSubmitting(true)
     setError(null)
     try {
-      await update(transaction, { amount: value, note: note.trim() || null })
+      await update(transaction, {
+        amount: value,
+        note: note.trim() || null,
+        tags,
+      })
       showToast('Transaction modifiée', 'success')
       onSaved?.()
       onClose()
@@ -126,6 +150,18 @@ export function TransactionEditSheet({
               onChange={(e) => setNote(e.target.value)}
               placeholder="Ex: Marché Sandaga"
               className="w-full h-12 px-4 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#1D9E75]"
+            />
+          </div>
+
+          <div>
+            <p className="block text-sm font-medium text-gray-700 mb-1.5">
+              Tags <span className="text-gray-400 font-normal">(optionnel)</span>
+            </p>
+            <TagInput
+              value={tags}
+              onChange={setTags}
+              suggestions={tagSuggestions}
+              placeholder="Ex: Voyage Dakar"
             />
           </div>
 

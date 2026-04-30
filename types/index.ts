@@ -53,6 +53,8 @@ export interface Transaction {
   /** Destination account (TRANSFERT only). compteId is the source. */
   toCompteId: string | null
   toCompteName: string | null
+  /** Free-form labels orthogonal to category. Optional for back-compat. */
+  tags?: string[]
   date: Timestamp
   note: string | null
   createdAt: Timestamp
@@ -69,6 +71,7 @@ export interface CreateTransactionInput {
   compteName: string
   toCompteId: string | null
   toCompteName: string | null
+  tags: string[]
   date: Date
   note: string | null
 }
