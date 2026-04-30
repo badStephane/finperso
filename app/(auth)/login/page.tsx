@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signIn } from '@/lib/firebase/auth'
+import { Logo } from '@/components/ui/Logo'
 import { LogIn, Eye, EyeOff } from 'lucide-react'
 
 function mapAuthError(code: string): string {
@@ -46,18 +47,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-gray-50">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/icons/icon-192.png"
-            alt="Finperso"
-            width={56}
-            height={56}
-            className="rounded-2xl mx-auto mb-3"
-          />
-          <h1 className="text-2xl font-semibold text-gray-900">Finperso</h1>
-          <p className="text-sm text-gray-500 mt-1">Connexion à votre compte</p>
-        </div>
+        <Logo subtitle="Connexion à votre compte" />
+        <h1 className="sr-only">Finperso — Connexion</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           {error && (

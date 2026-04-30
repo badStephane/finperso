@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signUp } from '@/lib/firebase/auth'
 import { seedUserData } from '@/lib/services/seedService'
+import { Logo } from '@/components/ui/Logo'
 import { UserPlus, Eye, EyeOff } from 'lucide-react'
 
 function mapAuthError(code: string): string {
@@ -70,18 +71,8 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-8 bg-gray-50">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/icons/icon-192.png"
-            alt="Finperso"
-            width={56}
-            height={56}
-            className="rounded-2xl mx-auto mb-3"
-          />
-          <h1 className="text-2xl font-semibold text-gray-900">Créer un compte</h1>
-          <p className="text-sm text-gray-500 mt-1">Commencez à gérer vos finances</p>
-        </div>
+        <Logo subtitle="Créez votre compte pour gérer vos finances" />
+        <h1 className="sr-only">Finperso — Créer un compte</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           {error && (
