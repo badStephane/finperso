@@ -61,16 +61,15 @@ export function useTransactions() {
 
   const add = useCallback(
     async (data: CreateTransactionInput) => {
-      if (!user) return
+      if (!user) throw new Error('Not authenticated')
       try {
         await txService.addTransaction(user.uid, data)
-        toast('Transaction ajoutée')
-      } catch {
-        toast("Erreur lors de l'ajout", 'error')
-        throw new Error('add failed')
+      } catch (err) {
+        console.error('[useTransactions.add] failed', err)
+        throw err
       }
     },
-    [user, toast]
+    [user]
   )
 
   const remove = useCallback(
