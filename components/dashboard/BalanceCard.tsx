@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 import { formatCFA } from '@/lib/utils/currency'
+import { useCountUp } from '@/hooks/useCountUp'
 import type { Compte, MonthlyStats } from '@/types'
 
 interface BalanceCardProps {
@@ -14,7 +15,11 @@ export function BalanceCard({ comptes, monthStats }: BalanceCardProps) {
   const [hidden, setHidden] = useState(false)
   const totalBalance = comptes.reduce((sum, c) => sum + c.balance, 0)
 
-  const display = (amount: number) => (hidden ? '••• F' : formatCFA(amount))
+  const animatedTotal = useCountUp(totalBalance, 700)
+  const animatedDepenses = useCountUp(monthStats?.totalDepenses ?? 0, 700)
+  const animatedRevenus = useCountUp(monthStats?.totalRevenus ?? 0, 700)
+
+  const display = (amount: number) => (hidden ? '••• F' : formatCFA(Math.round(amount)))
 
   return (
     <div className="mx-3 mt-3 bg-[#0F6E56] rounded-2xl p-4" role="region" aria-label="Solde total">
@@ -30,20 +35,23 @@ export function BalanceCard({ comptes, monthStats }: BalanceCardProps) {
           {hidden ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
         </button>
       </div>
-      <p className="text-[26px] sm:text-3xl font-semibold text-white mt-1 mb-3 tracking-tight tabular-nums break-all">
-        {display(totalBalance)}
+      <p
+        aria-live="polite"
+        className="text-[26px] sm:text-3xl font-semibold text-white mt-1 mb-3 tracking-tight tabular-nums break-all"
+      >
+        {display(animatedTotal)}
       </p>
       <div className="grid grid-cols-2 gap-2">
         <div className="bg-white/[0.12] rounded-lg px-3 py-2.5">
           <p className="text-xs text-white/80 leading-tight">Dépenses ce mois</p>
           <p className="text-sm font-semibold text-white mt-1 tabular-nums">
-            {display(monthStats?.totalDepenses ?? 0)}
+            {display(animatedDepenses)}
           </p>
         </div>
         <div className="bg-white/[0.12] rounded-lg px-3 py-2.5">
           <p className="text-xs text-white/80 leading-tight">Revenus ce mois</p>
           <p className="text-sm font-semibold text-white mt-1 tabular-nums">
-            {display(monthStats?.totalRevenus ?? 0)}
+            {display(animatedRevenus)}
           </p>
         </div>
       </div>
