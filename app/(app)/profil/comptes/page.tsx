@@ -1,12 +1,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { ArrowLeft, Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, Star } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 import * as compteService from '@/lib/services/compteService'
 import { formatCFA } from '@/lib/utils/currency'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { BottomSheet } from '@/components/ui/BottomSheet'
+import { SkeletonCard } from '@/components/ui/SkeletonLoader'
+import { ErrorState } from '@/components/ui/ErrorState'
 import type { Compte, CompteType } from '@/types'
 
 const TYPES: { label: string; value: CompteType }[] = [
@@ -19,21 +23,31 @@ const TYPES: { label: string; value: CompteType }[] = [
 const COLORS = ['#1D9E75', '#378ADD', '#BA7517', '#D4537E', '#639922', '#7F77DD', '#888780']
 
 export default function ComptesPage() {
-  const router = useRouter()
   const user = useAuthStore((s) => s.user)
   const toast = useToastStore((s) => s.show)
   const [comptes, setComptes] = useState<Compte[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [name, setName] = useState('')
   const [type, setType] = useState<CompteType>('MOBILE_MONEY')
   const [color, setColor] = useState('#1D9E75')
+  const [submitting, setSubmitting] = useState(false)
+  const [toDelete, setToDelete] = useState<Compte | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   async function load() {
     if (!user) return
-    const result = await compteService.getComptes(user.uid)
-    setComptes(result)
-    setLoading(false)
+    setLoading(true)
+    setError(false)
+    try {
+      const result = await compteService.getComptes(user.uid)
+      setComptes(result)
+    } catch {
+      setError(true)
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -43,104 +57,209 @@ export default function ComptesPage() {
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault()
     if (!user || !name.trim()) return
-    await compteService.addCompte(user.uid, { name: name.trim(), type, color })
-    toast('Compte ajouté')
-    setShowForm(false)
-    setName('')
-    await load()
+    setSubmitting(true)
+    try {
+      await compteService.addCompte(user.uid, { name: name.trim(), type, color })
+      toast('Compte ajouté', 'success')
+      setShowForm(false)
+      setName('')
+      await load()
+    } catch {
+      toast('Échec de l’ajout', 'error')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
-  async function handleDelete(compte: Compte) {
-    if (!user) return
+  async function handleConfirmDelete() {
+    if (!user || !toDelete) return
+    setDeleting(true)
+    try {
+      await compteService.deleteCompte(user.uid, toDelete.id)
+      toast('Compte supprimé', 'success')
+      setToDelete(null)
+      await load()
+    } catch {
+      toast('Échec de la suppression', 'error')
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  function handleDeleteClick(compte: Compte) {
     if (compte.balance !== 0) {
       toast('Impossible de supprimer un compte avec un solde non nul', 'error')
       return
     }
-    if (!confirm(`Supprimer le compte "${compte.name}" ?`)) return
-    await compteService.deleteCompte(user.uid, compte.id)
-    toast('Compte supprimé')
-    await load()
+    setToDelete(compte)
   }
 
   return (
     <div className="flex flex-col flex-1">
-      <div className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
-        <button onClick={() => router.back()} className="w-10 h-10 flex items-center justify-center -ml-2 cursor-pointer">
-          <ArrowLeft size={20} className="text-gray-600" />
-        </button>
-        <h1 className="text-base font-medium text-gray-900 flex-1">Mes comptes</h1>
-        <button onClick={() => setShowForm(!showForm)} className="w-10 h-10 flex items-center justify-center cursor-pointer">
-          <Plus size={20} className="text-[#1D9E75]" />
-        </button>
-      </div>
-
-      {showForm && (
-        <form onSubmit={handleAdd} className="mx-4 mt-3 p-4 bg-white border border-gray-200 rounded-xl space-y-3">
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Nom du compte"
-            required
-            className="w-full h-12 px-4 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#1D9E75]"
-          />
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value as CompteType)}
-            className="w-full h-12 px-4 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#1D9E75] cursor-pointer"
+      <PageHeader
+        title="Mes comptes"
+        back
+        action={
+          <button
+            type="button"
+            onClick={() => setShowForm(true)}
+            aria-label="Ajouter un compte"
+            className="w-11 h-11 flex items-center justify-center rounded-lg active:bg-[#E1F5EE] transition-colors"
           >
-            {TYPES.map((t) => (
-              <option key={t.value} value={t.value}>{t.label}</option>
-            ))}
-          </select>
-          <div className="flex gap-2">
-            {COLORS.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setColor(c)}
-                className={`w-8 h-8 rounded-full border-2 cursor-pointer ${color === c ? 'border-gray-900' : 'border-transparent'}`}
-                style={{ backgroundColor: c }}
-              />
-            ))}
-          </div>
-          <button type="submit" className="w-full h-10 bg-[#1D9E75] text-white rounded-xl text-sm font-medium cursor-pointer">
-            Ajouter
+            <Plus size={22} className="text-[#1D9E75]" />
           </button>
-        </form>
-      )}
+        }
+      />
 
-      <div className="mx-4 mt-3 bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="mx-4 mt-3">
         {loading ? (
-          <p className="text-center py-6 text-sm text-gray-400">Chargement...</p>
+          <div className="space-y-3">
+            <SkeletonCard />
+            <SkeletonCard />
+          </div>
+        ) : error ? (
+          <ErrorState onRetry={load} />
         ) : comptes.length === 0 ? (
-          <p className="text-center py-6 text-sm text-gray-400">Aucun compte</p>
+          <div className="bg-white border border-gray-200 rounded-xl py-8 text-center">
+            <p className="text-sm text-gray-500">Aucun compte</p>
+            <button
+              type="button"
+              onClick={() => setShowForm(true)}
+              className="mt-3 h-11 px-4 bg-[#1D9E75] text-white rounded-lg text-sm font-medium"
+            >
+              Ajouter mon premier compte
+            </button>
+          </div>
         ) : (
-          comptes.map((c) => (
-            <div key={c.id} className="flex items-center justify-between px-3 py-3 border-b border-gray-100 last:border-b-0">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg flex-shrink-0" style={{ backgroundColor: c.color }} />
-                <div>
-                  <p className="text-sm text-gray-900">{c.name}</p>
-                  <p className="text-[10px] text-gray-500">{TYPES.find((t) => t.value === c.type)?.label ?? c.type}</p>
+          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+            {comptes.map((c) => (
+              <div
+                key={c.id}
+                className="flex items-center justify-between px-3 py-3 border-b border-gray-100 last:border-b-0 min-h-[60px]"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div
+                    className="w-10 h-10 rounded-lg flex-shrink-0"
+                    style={{ backgroundColor: c.color }}
+                    aria-hidden="true"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate flex items-center gap-1.5">
+                      {c.name}
+                      {c.isDefault && (
+                        <Star
+                          className="w-3.5 h-3.5 text-[#BA7517] fill-current"
+                          aria-label="Compte par défaut"
+                        />
+                      )}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      {TYPES.find((t) => t.value === c.type)?.label ?? c.type}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-sm font-semibold text-gray-900 tabular-nums">
+                    {formatCFA(c.balance)}
+                  </span>
+                  {!c.isDefault && c.balance === 0 && (
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteClick(c)}
+                      className="w-11 h-11 flex items-center justify-center text-gray-400 active:text-[#D85A30] active:bg-[#FAECE7] rounded-lg transition-colors"
+                      aria-label={`Supprimer ${c.name}`}
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-900">{formatCFA(c.balance)}</span>
-                {!c.isDefault && c.balance === 0 && (
-                  <button
-                    onClick={() => handleDelete(c)}
-                    className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#D85A30] cursor-pointer"
-                    aria-label={`Supprimer ${c.name}`}
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                )}
-              </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
+
+      <BottomSheet open={showForm} onClose={() => setShowForm(false)} title="Nouveau compte">
+        <form onSubmit={handleAdd} className="space-y-4 pb-2">
+          <div>
+            <label htmlFor="compte-name" className="block text-sm font-medium text-gray-700 mb-1.5">
+              Nom du compte
+            </label>
+            <input
+              id="compte-name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ex: Wave"
+              required
+              className="w-full h-12 px-4 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#1D9E75]"
+            />
+          </div>
+          <div>
+            <label htmlFor="compte-type" className="block text-sm font-medium text-gray-700 mb-1.5">
+              Type
+            </label>
+            <select
+              id="compte-type"
+              value={type}
+              onChange={(e) => setType(e.target.value as CompteType)}
+              className="w-full h-12 px-4 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#1D9E75] cursor-pointer"
+            >
+              {TYPES.map((t) => (
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <p className="block text-sm font-medium text-gray-700 mb-2">Couleur</p>
+            <div className="flex gap-3 flex-wrap" role="radiogroup" aria-label="Choisir une couleur">
+              {COLORS.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  role="radio"
+                  aria-checked={color === c}
+                  aria-label={`Couleur ${c}`}
+                  onClick={() => setColor(c)}
+                  className="relative w-11 h-11 rounded-full flex items-center justify-center active:scale-95 transition-transform"
+                >
+                  <span
+                    className="block w-9 h-9 rounded-full"
+                    style={{ backgroundColor: c }}
+                  />
+                  {color === c && (
+                    <span
+                      className="absolute inset-0 rounded-full ring-2 ring-offset-2 ring-gray-900"
+                      aria-hidden="true"
+                    />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+          <button
+            type="submit"
+            disabled={submitting || !name.trim()}
+            aria-busy={submitting}
+            className="w-full h-12 bg-[#1D9E75] text-white rounded-xl text-base font-semibold disabled:opacity-50 active:bg-[#0F6E56] active:scale-[0.99] transition-all"
+          >
+            {submitting ? 'Ajout...' : 'Ajouter le compte'}
+          </button>
+        </form>
+      </BottomSheet>
+
+      <ConfirmDialog
+        open={!!toDelete}
+        title="Supprimer ce compte ?"
+        description={toDelete ? `"${toDelete.name}" sera supprimé. Cette action est irréversible.` : ''}
+        confirmLabel="Supprimer"
+        destructive
+        loading={deleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setToDelete(null)}
+      />
     </div>
   )
 }
