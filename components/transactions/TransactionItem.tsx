@@ -9,24 +9,32 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 interface TransactionItemProps {
   transaction: Transaction
   onDelete: (transaction: Transaction) => void
+  onTap?: (transaction: Transaction) => void
 }
 
-export function TransactionItem({ transaction: tx, onDelete }: TransactionItemProps) {
+export function TransactionItem({
+  transaction: tx,
+  onDelete,
+  onTap,
+}: TransactionItemProps) {
   const [swiped, setSwiped] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const startX = useRef(0)
   const startY = useRef(0)
   const isHorizontal = useRef(false)
+  const moved = useRef(false)
 
   function handleTouchStart(e: React.TouchEvent) {
     startX.current = e.touches[0].clientX
     startY.current = e.touches[0].clientY
     isHorizontal.current = false
+    moved.current = false
   }
 
   function handleTouchMove(e: React.TouchEvent) {
     const dx = Math.abs(e.touches[0].clientX - startX.current)
     const dy = Math.abs(e.touches[0].clientY - startY.current)
+    if (dx > 10 || dy > 10) moved.current = true
     if (dx > 10 && dx > dy) isHorizontal.current = true
   }
 
@@ -35,6 +43,13 @@ export function TransactionItem({ transaction: tx, onDelete }: TransactionItemPr
     const diff = startX.current - e.changedTouches[0].clientX
     if (diff > 60) setSwiped(true)
     else if (diff < -30) setSwiped(false)
+  }
+
+  function handleClick() {
+    // Don't trigger edit if the user just swiped (delete row exposed)
+    // or in the middle of a horizontal drag.
+    if (swiped || isHorizontal.current) return
+    onTap?.(tx)
   }
 
   function handleConfirmDelete() {
@@ -56,8 +71,11 @@ export function TransactionItem({ transaction: tx, onDelete }: TransactionItemPr
             <Trash2 size={20} />
           </button>
         )}
-        <div
-          className={`flex items-center gap-3 px-3 py-3 bg-white min-h-[60px] transition-transform duration-200 ease-out ${
+        <button
+          type="button"
+          onClick={handleClick}
+          aria-label={`Modifier ${tx.note || tx.categoryName}`}
+          className={`w-full flex items-center gap-3 px-3 py-3 bg-white min-h-[60px] text-left active:bg-gray-50 transition-[transform,background-color] duration-200 ease-out ${
             swiped ? '-translate-x-20' : ''
           }`}
           onTouchStart={handleTouchStart}
@@ -100,7 +118,7 @@ export function TransactionItem({ transaction: tx, onDelete }: TransactionItemPr
             {tx.type === 'DEPENSE' ? '−' : tx.type === 'REVENU' ? '+' : ''}
             {formatCFA(tx.amount)}
           </span>
-        </div>
+        </button>
       </div>
       <ConfirmDialog
         open={confirmOpen}

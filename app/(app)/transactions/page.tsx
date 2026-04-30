@@ -8,8 +8,10 @@ import { Badge } from '@/components/ui/Badge'
 import { SearchBar } from '@/components/transactions/SearchBar'
 import { TransactionFilterBar } from '@/components/transactions/TransactionFilters'
 import { TransactionList } from '@/components/transactions/TransactionList'
+import { TransactionEditSheet } from '@/components/transactions/TransactionEditSheet'
 import { matchesTransaction } from '@/lib/utils/search'
 import { formatMonthYear } from '@/lib/utils/dates'
+import type { Transaction } from '@/types'
 
 export default function TransactionsPage() {
   const {
@@ -24,6 +26,7 @@ export default function TransactionsPage() {
   } = useTransactions()
   const { categories } = useCategories()
   const [search, setSearch] = useState('')
+  const [editingTx, setEditingTx] = useState<Transaction | null>(null)
 
   useEffect(() => {
     loadTransactions()
@@ -82,6 +85,12 @@ export default function TransactionsPage() {
         hasMore={hasMore}
         onLoadMore={loadMore}
         onDelete={remove}
+        onEdit={setEditingTx}
+      />
+      <TransactionEditSheet
+        transaction={editingTx}
+        onClose={() => setEditingTx(null)}
+        onSaved={() => loadTransactions()}
       />
     </div>
   )

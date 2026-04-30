@@ -127,6 +127,103 @@ export async function getTransactions(
   }
 }
 
+/**
+ * Update an existing transaction's amount and/or note. Re-applies the delta
+ * to the account balance, the user's monthlyStats, and the matching budget
+ * (for DEPENSE) so the running totals stay accurate.
+ *
+ * Type, compte, category and date are not editable here — those changes
+ * touch too many denormalized aggregates and would deserve their own flow.
+ */
+export async function updateTransaction(
+  userId: string,
+  txId: string,
+  oldTx: Transaction,
+  newData: { amount: number; note: string | null }
+) {
+  const batch = writeBatch(db)
+  const txRef = doc(db, `users/${userId}/transactions/${txId}`)
+  batch.update(txRef, {
+    amount: newData.amount,
+    note: newData.note,
+  })
+
+  const amountDelta = newData.amount - oldTx.amount
+  if (amountDelta === 0) {
+    await batch.commit()
+    return
+  }
+
+  if (oldTx.type === 'TRANSFERT') {
+    // Source: was -old, now -new → delta = -(new-old)
+    batch.update(doc(db, `users/${userId}/comptes/${oldTx.compteId}`), {
+      balance: increment(-amountDelta),
+    })
+    if (oldTx.toCompteId) {
+      batch.update(doc(db, `users/${userId}/comptes/${oldTx.toCompteId}`), {
+        balance: increment(amountDelta),
+      })
+    }
+    await batch.commit()
+    return
+  }
+
+  // DEPENSE / REVENU: balance was ±old, now ±new → delta = ±(new-old)
+  const sign = oldTx.type === 'REVENU' ? 1 : -1
+  batch.update(doc(db, `users/${userId}/comptes/${oldTx.compteId}`), {
+    balance: increment(sign * amountDelta),
+  })
+
+  const monthKey = format(oldTx.date.toDate(), 'yyyy-MM')
+  const userRef = doc(db, `users/${userId}`)
+  if (oldTx.type === 'DEPENSE') {
+    batch.set(
+      userRef,
+      {
+        monthlyStats: {
+          [monthKey]: {
+            totalDepenses: increment(amountDelta),
+            solde: increment(-amountDelta),
+          },
+        },
+      },
+      { merge: true }
+    )
+  } else {
+    batch.set(
+      userRef,
+      {
+        monthlyStats: {
+          [monthKey]: {
+            totalRevenus: increment(amountDelta),
+            solde: increment(amountDelta),
+          },
+        },
+      },
+      { merge: true }
+    )
+  }
+
+  if (oldTx.type === 'DEPENSE') {
+    const month = oldTx.date.toDate().getMonth() + 1
+    const year = oldTx.date.toDate().getFullYear()
+    const budgetQuery = query(
+      collection(db, `users/${userId}/budgets`),
+      where('categoryId', '==', oldTx.categoryId),
+      where('month', '==', month),
+      where('year', '==', year)
+    )
+    const budgetSnap = await getDocs(budgetQuery)
+    if (!budgetSnap.empty) {
+      batch.update(budgetSnap.docs[0].ref, {
+        spent: increment(amountDelta),
+      })
+    }
+  }
+
+  await batch.commit()
+}
+
 export async function deleteTransaction(
   userId: string,
   transactionId: string,

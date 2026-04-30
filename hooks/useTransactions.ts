@@ -35,7 +35,8 @@ export function useTransactions() {
         setTransactions(result.transactions)
         setLastDoc(result.lastDoc)
         setHasMore(result.hasMore)
-      } catch {
+      } catch (err) {
+        console.error('[useTransactions.loadTransactions] failed', err)
         toast('Erreur de chargement', 'error')
       } finally {
         setLoading(false)
@@ -52,7 +53,8 @@ export function useTransactions() {
       appendTransactions(result.transactions)
       setLastDoc(result.lastDoc)
       setHasMore(result.hasMore)
-    } catch {
+    } catch (err) {
+      console.error('[useTransactions.loadMore] failed', err)
       toast('Erreur de chargement', 'error')
     } finally {
       setLoading(false)
@@ -66,6 +68,22 @@ export function useTransactions() {
         await txService.addTransaction(user.uid, data)
       } catch (err) {
         console.error('[useTransactions.add] failed', err)
+        throw err
+      }
+    },
+    [user]
+  )
+
+  const update = useCallback(
+    async (
+      transaction: Transaction,
+      newData: { amount: number; note: string | null }
+    ) => {
+      if (!user) throw new Error('Not authenticated')
+      try {
+        await txService.updateTransaction(user.uid, transaction.id, transaction, newData)
+      } catch (err) {
+        console.error('[useTransactions.update] failed', err)
         throw err
       }
     },
@@ -95,6 +113,7 @@ export function useTransactions() {
     loadTransactions,
     loadMore,
     add,
+    update,
     remove,
   }
 }
