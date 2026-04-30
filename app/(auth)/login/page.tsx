@@ -4,12 +4,27 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signIn } from '@/lib/firebase/auth'
-import { LogIn } from 'lucide-react'
+import { LogIn, Eye, EyeOff } from 'lucide-react'
+
+function mapAuthError(code: string): string {
+  if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+    return 'Email ou mot de passe incorrect.'
+  }
+  if (code === 'auth/invalid-email') return 'Email invalide.'
+  if (code === 'auth/network-request-failed') {
+    return 'Connexion impossible. Vérifiez votre réseau.'
+  }
+  if (code === 'auth/too-many-requests') {
+    return 'Trop de tentatives. Réessayez dans quelques minutes.'
+  }
+  return 'Échec de connexion. Réessayez.'
+}
 
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -20,8 +35,9 @@ export default function LoginPage() {
     try {
       await signIn(email, password)
       router.replace('/')
-    } catch {
-      setError('Email ou mot de passe incorrect')
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code ?? ''
+      setError(mapAuthError(code))
     } finally {
       setLoading(false)
     }
@@ -31,22 +47,40 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-gray-50">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <img src="/icons/icon-192.png" alt="Finperso" className="w-14 h-14 rounded-2xl mx-auto mb-3" />
-          <h1 className="text-xl font-semibold text-gray-900">Finperso</h1>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/icons/icon-192.png"
+            alt="Finperso"
+            width={56}
+            height={56}
+            className="rounded-2xl mx-auto mb-3"
+          />
+          <h1 className="text-2xl font-semibold text-gray-900">Finperso</h1>
           <p className="text-sm text-gray-500 mt-1">Connexion à votre compte</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           {error && (
-            <div className="bg-[#FAECE7] text-[#993C1D] text-sm px-4 py-3 rounded-xl">
+            <div
+              role="alert"
+              className="bg-[#FAECE7] text-[#993C1D] text-sm px-4 py-3 rounded-xl"
+            >
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm text-gray-700 mb-1">Email</label>
+            <label htmlFor="login-email" className="block text-sm font-medium text-gray-700 mb-1.5">
+              Email
+            </label>
             <input
+              id="login-email"
               type="email"
+              inputMode="email"
+              autoComplete="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -56,21 +90,40 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-700 mb-1">Mot de passe</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full h-12 px-4 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
-              placeholder="••••••••"
-            />
+            <label
+              htmlFor="login-password"
+              className="block text-sm font-medium text-gray-700 mb-1.5"
+            >
+              Mot de passe
+            </label>
+            <div className="relative">
+              <input
+                id="login-password"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full h-12 px-4 pr-12 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                aria-pressed={showPassword}
+                className="absolute inset-y-0 right-1 my-auto w-11 h-11 flex items-center justify-center text-gray-500 active:bg-gray-100 rounded-lg transition-colors"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-12 bg-[#1D9E75] text-white rounded-xl font-medium text-base flex items-center justify-center gap-2 active:bg-[#0F6E56] disabled:opacity-50 transition-colors"
+            aria-busy={loading}
+            className="w-full h-12 bg-[#1D9E75] text-white rounded-xl font-semibold text-base flex items-center justify-center gap-2 active:bg-[#0F6E56] active:scale-[0.99] disabled:opacity-50 transition-all"
           >
             <LogIn size={18} />
             {loading ? 'Connexion...' : 'Se connecter'}
