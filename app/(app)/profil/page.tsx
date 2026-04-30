@@ -9,6 +9,7 @@ import { useComptes } from '@/hooks/useComptes'
 import { useToastStore } from '@/stores/toastStore'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { InstallPrompt } from '@/components/InstallPrompt'
 import { formatCFA } from '@/lib/utils/currency'
 import { exportTransactionsCSV, downloadCSV } from '@/lib/services/exportService'
 import { CreditCard, Tag, Download, LogOut, ChevronRight, Loader2 } from 'lucide-react'
@@ -66,6 +67,10 @@ export default function ProfilPage() {
         </div>
         <p className="text-base font-semibold text-gray-900 mt-3">{profile?.name}</p>
         <p className="text-sm text-gray-500 mt-0.5 truncate max-w-[80%]">{user?.email}</p>
+      </div>
+
+      <div className="mx-4 mt-3">
+        <InstallPrompt />
       </div>
 
       <div className="mx-4 mt-3 grid grid-cols-3 bg-white border border-gray-200 rounded-xl overflow-hidden">
