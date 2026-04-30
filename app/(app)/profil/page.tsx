@@ -12,7 +12,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { InstallPrompt } from '@/components/InstallPrompt'
 import { formatCFA } from '@/lib/utils/currency'
 import { exportTransactionsCSV, downloadCSV } from '@/lib/services/exportService'
-import { CreditCard, Tag, Download, LogOut, ChevronRight, Loader2 } from 'lucide-react'
+import { CreditCard, Tag, Download, LogOut, ChevronRight, Loader2, Repeat } from 'lucide-react'
 
 const TYPE_LABELS: Record<string, string> = {
   COURANT: 'Courant',
@@ -164,6 +164,21 @@ export default function ProfilPage() {
               <Tag size={18} className="text-gray-700" />
             </div>
             <span className="text-sm font-medium text-gray-900">Catégories</span>
+          </div>
+          <ChevronRight size={18} className="text-gray-400" />
+        </Link>
+        <Link
+          href="/profil/recurrences"
+          className="flex items-center justify-between px-3 py-3 border-b border-gray-100 active:bg-gray-50 min-h-[56px]"
+        >
+          <div className="flex items-center gap-3">
+            <div
+              className="w-9 h-9 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: '#E1F5EE' }}
+            >
+              <Repeat size={18} className="text-gray-700" />
+            </div>
+            <span className="text-sm font-medium text-gray-900">Récurrences</span>
           </div>
           <ChevronRight size={18} className="text-gray-400" />
         </Link>

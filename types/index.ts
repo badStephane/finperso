@@ -107,3 +107,40 @@ export interface Budget {
   month: number
   year: number
 }
+
+export type RecurrenceFrequency = 'MONTHLY'
+
+export interface Recurrence {
+  id: string
+  name: string
+  amount: number
+  type: 'DEPENSE' | 'REVENU'
+  categoryId: string
+  categoryName: string
+  categoryIcon: string
+  compteId: string
+  compteName: string
+  note: string | null
+  frequency: RecurrenceFrequency
+  /** 1–31, clamped to last day of target month if needed */
+  dayOfMonth: number
+  nextDueDate: Timestamp
+  active: boolean
+  createdAt: Timestamp
+}
+
+export interface CreateRecurrenceInput {
+  name: string
+  amount: number
+  type: 'DEPENSE' | 'REVENU'
+  categoryId: string
+  categoryName: string
+  categoryIcon: string
+  compteId: string
+  compteName: string
+  note: string | null
+  frequency: RecurrenceFrequency
+  dayOfMonth: number
+  nextDueDate: Date
+  active: boolean
+}
