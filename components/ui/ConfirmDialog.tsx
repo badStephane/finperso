@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { haptic } from '@/lib/utils/haptic'
 
 interface ConfirmDialogProps {
   open: boolean
@@ -82,7 +83,10 @@ export function ConfirmDialog({
           </button>
           <button
             type="button"
-            onClick={onConfirm}
+            onClick={() => {
+              haptic(destructive ? 'warning' : 'tap')
+              onConfirm()
+            }}
             disabled={loading}
             aria-busy={loading}
             className={`flex-1 h-12 px-4 rounded-lg text-sm font-medium text-white disabled:opacity-60 active:scale-[0.98] transition-transform ${

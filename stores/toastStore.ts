@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { haptic } from '@/lib/utils/haptic'
 
 interface ToastState {
   message: string | null
@@ -12,6 +13,7 @@ export const useToastStore = create<ToastState>((set) => ({
   type: 'success',
   show: (message, type = 'success') => {
     set({ message, type })
+    haptic(type === 'success' ? 'success' : 'error')
     setTimeout(() => set({ message: null }), 3000)
   },
   hide: () => set({ message: null }),
