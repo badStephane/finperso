@@ -22,7 +22,7 @@ export function BottomNav() {
       role="navigation"
       aria-label="Navigation principale"
     >
-      <div className="flex items-center justify-around h-14 max-w-lg mx-auto">
+      <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-1">
         {tabs.map((tab) => {
           if (tab.isFab) {
             return (
@@ -30,9 +30,9 @@ export function BottomNav() {
                 key={tab.href}
                 href={tab.href}
                 aria-label="Ajouter une transaction"
-                className="flex items-center justify-center w-12 h-12 -mt-5 rounded-full bg-[#1D9E75] text-white shadow-lg active:scale-95 transition-transform cursor-pointer hover:bg-[#0F6E56]"
+                className="flex items-center justify-center w-14 h-14 -mt-6 rounded-full bg-[#1D9E75] text-white shadow-lg active:scale-95 transition-transform cursor-pointer hover:bg-[#0F6E56] shrink-0"
               >
-                <Plus size={24} strokeWidth={2.5} />
+                <Plus size={26} strokeWidth={2.5} />
               </Link>
             )
           }
@@ -46,12 +46,12 @@ export function BottomNav() {
               href={tab.href}
               aria-label={tab.label}
               aria-current={isActive ? 'page' : undefined}
-              className={`flex flex-col items-center gap-0.5 min-w-[44px] min-h-[44px] justify-center cursor-pointer transition-colors ${
+              className={`flex flex-col items-center justify-center gap-0.5 flex-1 min-w-[44px] min-h-[44px] cursor-pointer transition-colors ${
                 isActive ? 'text-[#1D9E75]' : 'text-gray-400 hover:text-gray-600'
               }`}
             >
-              <Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
-              <span className={`text-[9px] ${isActive ? 'font-medium' : ''}`}>{tab.label}</span>
+              <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} className={isActive ? 'scale-110 transition-transform' : ''} />
+              <span className={`text-[11px] leading-none ${isActive ? 'font-semibold' : 'font-medium'} truncate max-w-full`}>{tab.label}</span>
             </Link>
           )
         })}
