@@ -83,7 +83,7 @@ export function BottomSheet({ open, onClose, title, children, maxHeight = '90vh'
         style={{
           maxHeight,
           animation: 'sheetUp 280ms cubic-bezier(0.16, 1, 0.3, 1)',
-          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.75rem)',
         }}
       >
         <div

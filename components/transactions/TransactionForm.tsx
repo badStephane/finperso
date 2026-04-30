@@ -233,7 +233,10 @@ export function TransactionForm() {
         </div>
       )}
 
-      <div className="px-4 mt-auto pt-6 pb-4">
+      <div
+        className="sticky bottom-0 px-4 pt-3 pb-4 mt-6 bg-white/95 backdrop-blur border-t border-gray-100"
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}
+      >
         {missing && !submitting && (
           <p className="text-xs text-gray-500 text-center mb-2">{missing}</p>
         )}

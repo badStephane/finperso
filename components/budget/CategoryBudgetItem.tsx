@@ -36,7 +36,7 @@ export function CategoryBudgetItem({ budget, onUpdate }: CategoryBudgetItemProps
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-3.5">
       <div className="flex items-center justify-between gap-2 mb-2">
-        <div className="flex items-center gap-2.5 min-w-0">
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center text-base shrink-0"
             style={{ backgroundColor: '#E1F5EE' }}
@@ -44,19 +44,24 @@ export function CategoryBudgetItem({ budget, onUpdate }: CategoryBudgetItemProps
           >
             {budget.categoryIcon}
           </div>
-          <span className="text-sm font-medium text-gray-900 truncate">{budget.categoryName}</span>
-        </div>
-        {editing ? (
-          <div className="flex items-center gap-1.5 shrink-0">
+          {editing ? (
             <input
               type="text"
               inputMode="numeric"
               value={formatThousands(newAmount)}
               onChange={(e) => setNewAmount(e.target.value.replace(/\D/g, ''))}
-              aria-label="Montant du budget"
-              className="w-28 h-11 px-3 text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D9E75] tabular-nums"
+              aria-label={`Budget pour ${budget.categoryName}`}
+              className="flex-1 min-w-0 h-11 px-3 text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D9E75] tabular-nums"
               autoFocus
             />
+          ) : (
+            <span className="text-sm font-medium text-gray-900 truncate">
+              {budget.categoryName}
+            </span>
+          )}
+        </div>
+        {editing ? (
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               type="button"
               onClick={handleSave}
